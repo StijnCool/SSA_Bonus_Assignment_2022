@@ -25,8 +25,8 @@ public class Simulation {
         Arrival times according to Poisson process:
         - Arrival rate (lambda) = 1/min = (1/60)/s
         Service times according to normal distribution:
-        - Mean = 2.6 min = (13/300)/s
-        - Standard deviation = 1.1 min = (11/600)/s
+        - Mean = 2.6 min = 156 s
+        - Standard deviation = 1.1 min = 66 s
         - Minimum service time = 1 sec
          */
         double[] interarrivalTimes = {};
@@ -35,7 +35,11 @@ public class Simulation {
         /*
         Service Desk Customers
         Arrival times according to Poisson process:
-        - Mean interarrival time () = 5 min = 300 s
+        - Mean interarrival time (1/lambda) = 5 min = 300 s
+        Service times according to normal distribution:
+        - Mean = 4.1 min = 246 s
+        - Standard deviation = 1.1 min = 66 s
+        - Minimum service time = 1 sec
          */
 
 
