@@ -21,6 +21,7 @@ public class Simulation {
     public static void main(String[] args) {
 
         /*
+        Regular Customers
         Arrival times according to Poisson process:
         - Arrival rate (lambda) = 1/min = (1/60)/s
         Service times according to normal distribution:
@@ -30,6 +31,13 @@ public class Simulation {
          */
         double[] interarrivalTimes = {};
         double[] serviceTimes = {};
+
+        /*
+        Service Desk Customers
+        Arrival times according to Poisson process:
+        - Mean interarrival time () = 5 min = 300 s
+         */
+
 
     	// Create an eventlist
 	    CEventList l = new CEventList();
