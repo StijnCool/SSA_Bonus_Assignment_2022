@@ -20,8 +20,16 @@ public class Simulation {
      */
     public static void main(String[] args) {
 
-        double[] interarrivalTimes = {0.4, 1.2, 0.5, 1.7, 0.2, 1.6, 0.2, 1.4, 1.9};
-        double[] serviceTimes = {2.0, 0.7, 0.2, 1.1, 3.7, 0.6, 4.0, 4.0, 4.0};
+        /*
+        Arrival times according to Poisson process:
+        - Arrival rate (lambda) = 1/min = (1/60)/s
+        Service times according to normal distribution:
+        - Mean = 2.6 min = (13/300)/s
+        - Standard deviation = 1.1 min = (11/600)/s
+        - Minimum service time = 1 sec
+         */
+        double[] interarrivalTimes = {};
+        double[] serviceTimes = {};
 
     	// Create an eventlist
 	    CEventList l = new CEventList();
