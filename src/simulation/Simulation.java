@@ -53,17 +53,18 @@ public class Simulation {
     	// Create an eventlist
 	    CEventList l = new CEventList();
 	    // A queue for the machine
-	    Queue q = new Queue();
+	    Queue queueRegular = new Queue();
+        Queue queueService = new Queue();
 	    // A source
-	    Source sourceRegular = new Source(q,l,"Source Regular",1);
-        Source sourceService = new Source(q,l,"Source Service",0.2);
+	    Source sourceRegular = new Source(queueRegular,l,"Source Regular",1);
+        Source sourceService = new Source(queueService,l,"Source Service",0.2);
 	    // A sink
 	    Sink si = new Sink("Sink 1");
 	    // A machine
-	    Machine machineRegular = new Machine(q,si,l,"Machine Regular", 2.6,1.1);
-        Machine machineService = new Machine(q,si,l,"Machine Service", 4.1,1.1);
+	    Machine machineRegular = new Machine(queueRegular,si,l,"Machine Regular", 2.6,1.1);
+        Machine machineService = new Machine(queueService,si,l,"Machine Service", 4.1,1.1);
 	    // start the eventlist
-	    l.start(8.7); // 2000 is maximum time
+	    l.start(10); // 2000 is maximum time
     }
 
     /**

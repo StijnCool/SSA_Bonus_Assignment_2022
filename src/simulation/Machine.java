@@ -160,7 +160,7 @@ public class Machine implements CProcess,ProductAcceptor
 	private void startProduction()
 	{
 		// generate duration
-		if(meanProcTime>0)
+		if(mean>0)
 		{
 			double duration = Simulation.generate_service_time(mean,STD,1/60);
 			// Create a new event in the eventlist

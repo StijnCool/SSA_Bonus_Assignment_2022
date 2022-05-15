@@ -20,7 +20,7 @@ public class Source implements CProcess
 	/** Interarrival times (in case pre-specified) */
 	private double[] interarrivalTimes;
 	/** Interarrival time iterator */
-	private int interArrCnt;
+	private int interArrCnt=0;
 	private double arrivalRate;
 
 	/**
@@ -37,7 +37,9 @@ public class Source implements CProcess
 		name = n;
 		arrivalRate = _arrivalRate;
 		// put first event in list for initialization
-		list.add(this,0,Simulation.generate_interarrival_time(arrivalRate)); //target,type,time
+		double firstIAT = Simulation.generate_interarrival_time(arrivalRate);
+		list.add(this,0,firstIAT); //target,type,time
+		interarrivalTimes = new double[]{firstIAT};
 	}
 
 	/**
@@ -108,7 +110,7 @@ public class Source implements CProcess
 		p.stamp(tme,"Creation",name);
 		queue.giveProduct(p);
 		// generate duration
-		if(meanArrTime>0)
+		if(1/arrivalRate>0)
 		{
 			double duration = Simulation.generate_interarrival_time(arrivalRate);
 			// Create a new event in the eventlist
