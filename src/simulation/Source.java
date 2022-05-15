@@ -21,6 +21,24 @@ public class Source implements CProcess
 	private double[] interarrivalTimes;
 	/** Interarrival time iterator */
 	private int interArrCnt;
+	private double arrivalRate;
+
+	/**
+	 *	Constructor, creates objects
+	 *        Interarrival times are exponentially distributed with mean 33
+	 *	@param q	The receiver of the products
+	 *	@param l	The eventlist that is requested to construct events
+	 *	@param n	Name of object
+	 */
+	public Source(ProductAcceptor q,CEventList l,String n, double _arrivalRate)
+	{
+		list = l;
+		queue = q;
+		name = n;
+		arrivalRate = _arrivalRate;
+		// put first event in list for initialization
+		list.add(this,0,Simulation.generate_interarrival_time(arrivalRate)); //target,type,time
+	}
 
 	/**
 	*	Constructor, creates objects
@@ -47,6 +65,8 @@ public class Source implements CProcess
 	*	@param n	Name of object
 	*	@param m	Mean arrival time
 	*/
+
+	/**
 	public Source(ProductAcceptor q,CEventList l,String n,double m)
 	{
 		list = l;
@@ -56,6 +76,7 @@ public class Source implements CProcess
 		// put first event in list for initialization
 		list.add(this,0,drawRandomExponential(meanArrTime)); //target,type,time
 	}
+	 */
 
 	/**
 	*	Constructor, creates objects
@@ -89,7 +110,7 @@ public class Source implements CProcess
 		// generate duration
 		if(meanArrTime>0)
 		{
-			double duration = drawRandomExponential(meanArrTime);
+			double duration = Simulation.generate_interarrival_time(arrivalRate);
 			// Create a new event in the eventlist
 			list.add(this,0,tme+duration); //target,type,time
 		}

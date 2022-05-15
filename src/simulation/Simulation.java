@@ -48,7 +48,6 @@ public class Simulation {
         - Minimum service time = 1 sec
          */
 
-        double[] interarrivalTimes = {};
         double[] serviceTimes = {};
 
     	// Create an eventlist
@@ -56,7 +55,8 @@ public class Simulation {
 	    // A queue for the machine
 	    Queue q = new Queue();
 	    // A source
-	    Source s = new Source(q,l,"Source 1",interarrivalTimes);
+	    Source sourceRegular = new Source(q,l,"Source 1",1);
+        Source sourceService = new Source(q,l,"Source 1",0.2);
 	    // A sink
 	    Sink si = new Sink("Sink 1");
 	    // A machine
@@ -70,7 +70,7 @@ public class Simulation {
      * @param arrivalRate  double  The arrival rate lambda of the poisson process
      * @return              double  The generated interarrival time in seconds
      */
-    private static double generate_interarrival_time(double arrivalRate){
+    public static double generate_interarrival_time(double arrivalRate){
         // Poisson arrival times lead to exponential interarrival times
         double U = generator.nextDouble();
         double X = -1/arrivalRate*Math.log(1-U);
@@ -83,7 +83,7 @@ public class Simulation {
      * @param standardDeviation    double  The standard deviation of the normal distribution
      * @return                      double  The generated service time
      */
-    private static double generate_service_time(double mean, double standardDeviation,double minimumServiceTime){
+    public static double generate_service_time(double mean, double standardDeviation,double minimumServiceTime){
         // Generate using Box-Muller Transform
         double U1 = generator.nextDouble();
         double U2 = generator.nextDouble();
