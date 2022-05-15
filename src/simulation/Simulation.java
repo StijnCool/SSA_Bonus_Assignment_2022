@@ -6,6 +6,11 @@
 
 package simulation;
 
+import java.sql.SQLOutput;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 public class Simulation {
 
     public CEventList list;
@@ -13,6 +18,8 @@ public class Simulation {
     public Source source;
     public Sink sink;
     public Machine mach;
+
+    private static Random generator = new Random(314159);
 	
 
         /**
@@ -24,61 +31,73 @@ public class Simulation {
         Regular Customers
         Arrival times according to Poisson process:
         - Arrival rate (lambda) = 1/min = (1/60)/s
-        Service times according to normal distribution:
+        Service times according to normal distribution (per register):
         - Mean = 2.6 min = 156 s
         - Standard deviation = 1.1 min = 66 s
         - Minimum service time = 1 sec
          */
-        double[] interarrivalTimes = {};
-        double[] serviceTimes = {};
 
         /*
         Service Desk Customers
         Arrival times according to Poisson process:
         - Mean interarrival time (1/lambda) = 5 min = 300 s
         - Arrival rate (lambda) = 0.2/min = (1/300)/s
-        Service times according to normal distribution:
+        Service times according to normal distribution (per register):
         - Mean = 4.1 min = 246 s
         - Standard deviation = 1.1 min = 66 s
         - Minimum service time = 1 sec
          */
 
+        List<Double> serviceTimes = new ArrayList<Double>();
+        for(int i=0;i<10000;i++){
+            serviceTimes.add(generate_service_time(4.1,1.1,1/60));
+        }
+        print(0);
+
 
     	// Create an eventlist
-	    CEventList l = new CEventList();
+	    //CEventList l = new CEventList();
 	    // A queue for the machine
-	    Queue q = new Queue();
+	    //Queue q = new Queue();
 	    // A source
-	    Source s = new Source(q,l,"Source 1",interarrivalTimes);
+	    //Source s = new Source(q,l,"Source 1",interarrivalTimes);
 	    // A sink
-	    Sink si = new Sink("Sink 1");
+	    //Sink si = new Sink("Sink 1");
 	    // A machine
-	    Machine m = new Machine(q,si,l,"Machine 1", serviceTimes);
+	    //Machine m = new Machine(q,si,l,"Machine 1", serviceTimes);
 	    // start the eventlist
-	    l.start(8.7); // 2000 is maximum time
+	    //l.start(8.7); // 2000 is maximum time
     }
 
     /**
      * Method to generate an interarrival time according to Poisson process
-     * @param arrival_rate  double  The arrival rate lambda of the poisson process
-     * @return              double  The generated interarrival time
+     * @param arrivalRate  double  The arrival rate lambda of the poisson process
+     * @return              double  The generated interarrival time in seconds
      */
-    private static double generate_interarrival_time(double arrival_rate){
-        double t_ia;
-        t_ia = -1;
-        return t_ia;
+    private static double generate_interarrival_time(double arrivalRate){
+        // Poisson arrival times lead to exponential interarrival times
+        double U = generator.nextDouble();
+        double X = -1/arrivalRate*Math.log(1-U);
+        return X;
     }
 
     /**
      * Method to generate a service time according to normal distribution
      * @param mean                  double  The mean of the normal distribution
-     * @param standard_deviation    double  The standard deviation of the normal distribution
+     * @param standardDeviation    double  The standard deviation of the normal distribution
      * @return                      double  The generated service time
      */
-    private static double generate_service_time(double mean, double standard_deviation){
-        double t_s;
-        t_s = -1;
-        return t_s;
+    private static double generate_service_time(double mean, double standardDeviation,double minimumServiceTime){
+        // Generate using Box-Muller Transform
+        double U1 = generator.nextDouble();
+        double U2 = generator.nextDouble();
+        double magnitude = standardDeviation * Math.sqrt(-2.0 * Math.log(U1));
+        double X = magnitude * Math.cos(2*Math.PI * U2) + mean;
+        return X;
+    }
+
+    private static <T> void print(T s){
+        System.out.println(s);
     }
     
 }
