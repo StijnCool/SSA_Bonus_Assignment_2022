@@ -48,25 +48,21 @@ public class Simulation {
         - Minimum service time = 1 sec
          */
 
-        List<Double> serviceTimes = new ArrayList<Double>();
-        for(int i=0;i<10000;i++){
-            serviceTimes.add(generate_service_time(4.1,1.1,1/60));
-        }
-        print(0);
-
+        double[] interarrivalTimes = {};
+        double[] serviceTimes = {};
 
     	// Create an eventlist
-	    //CEventList l = new CEventList();
+	    CEventList l = new CEventList();
 	    // A queue for the machine
-	    //Queue q = new Queue();
+	    Queue q = new Queue();
 	    // A source
-	    //Source s = new Source(q,l,"Source 1",interarrivalTimes);
+	    Source s = new Source(q,l,"Source 1",interarrivalTimes);
 	    // A sink
-	    //Sink si = new Sink("Sink 1");
+	    Sink si = new Sink("Sink 1");
 	    // A machine
-	    //Machine m = new Machine(q,si,l,"Machine 1", serviceTimes);
+	    Machine m = new Machine(q,si,l,"Machine 1", serviceTimes);
 	    // start the eventlist
-	    //l.start(8.7); // 2000 is maximum time
+	    l.start(8.7); // 2000 is maximum time
     }
 
     /**
@@ -93,7 +89,7 @@ public class Simulation {
         double U2 = generator.nextDouble();
         double magnitude = standardDeviation * Math.sqrt(-2.0 * Math.log(U1));
         double X = magnitude * Math.cos(2*Math.PI * U2) + mean;
-        return X;
+        return Math.max(X,minimumServiceTime);
     }
 
     private static <T> void print(T s){
