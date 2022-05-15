@@ -55,12 +55,13 @@ public class Simulation {
 	    // A queue for the machine
 	    Queue q = new Queue();
 	    // A source
-	    Source sourceRegular = new Source(q,l,"Source 1",1);
-        Source sourceService = new Source(q,l,"Source 1",0.2);
+	    Source sourceRegular = new Source(q,l,"Source Regular",1);
+        Source sourceService = new Source(q,l,"Source Service",0.2);
 	    // A sink
 	    Sink si = new Sink("Sink 1");
 	    // A machine
-	    Machine m = new Machine(q,si,l,"Machine 1", serviceTimes);
+	    Machine machineRegular = new Machine(q,si,l,"Machine Regular", 2.6,1.1);
+        Machine machineService = new Machine(q,si,l,"Machine Service", 4.1,1.1);
 	    // start the eventlist
 	    l.start(8.7); // 2000 is maximum time
     }

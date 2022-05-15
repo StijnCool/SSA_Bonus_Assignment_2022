@@ -25,7 +25,28 @@ public class Machine implements CProcess,ProductAcceptor
 	private double[] processingTimes;
 	/** Processing time iterator */
 	private int procCnt;
-	
+	private double mean;
+	private double STD;
+
+	/**
+	 *	Constructor
+	 *        Service times are exponentially distributed with specified mean
+	 *	@param q	Queue from which the machine has to take products
+	 *	@param s	Where to send the completed products
+	 *	@param e	Eventlist that will manage events
+	 *	@param n	The name of the machine
+	 */
+	public Machine(Queue q, ProductAcceptor s, CEventList e, String n, double _mean, double _STD)
+	{
+		status='i';
+		queue=q;
+		sink=s;
+		eventlist=e;
+		name=n;
+		mean = _mean;
+		STD = _STD;
+		queue.askProduct(this);
+	}
 
 	/**
 	*	Constructor
@@ -141,7 +162,7 @@ public class Machine implements CProcess,ProductAcceptor
 		// generate duration
 		if(meanProcTime>0)
 		{
-			double duration = drawRandomExponential(meanProcTime);
+			double duration = Simulation.generate_service_time(mean,STD,1/60);
 			// Create a new event in the eventlist
 			double tme = eventlist.getTime();
 			eventlist.add(this,0,tme+duration); //target,type,time
