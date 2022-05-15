@@ -8,13 +8,14 @@ package simulation;
 
 import java.sql.SQLOutput;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
 public class Simulation {
 
     public CEventList list;
-    public Queue queue;
+    //public static Queue queueService = new Queue("open");
     public Source source;
     public Sink sink;
     public Machine mach;
@@ -53,16 +54,24 @@ public class Simulation {
     	// Create an eventlist
 	    CEventList l = new CEventList();
 	    // A queue for the machine
-	    Queue queueRegular = new Queue();
-        Queue queueService = new Queue();
+	    Queue queueService = new Queue("open");
+        Queue queueCashService = new Queue("open");
+        Queue queueCash1 = new Queue("open");
+        Queue queueCash2 = new Queue("open");
+        Queue queueCash3 = new Queue("switching");
+        Queue queueCash4 = new Queue("switching");
+        Queue queueCash5 = new Queue("switching");
+
+        ArrayList<Queue> cashQueues = new ArrayList<>(Arrays.asList(queueCash1, queueCash2, queueCash3, queueCash4, queueCash5, queueCashService, queueService));
+        ArrayList<Queue> serviceDeskQueues = new ArrayList<>(Arrays.asList(queueService));
 	    // A source
-	    Source sourceRegular = new Source(queueRegular,l,"Source Regular",1);
-        Source sourceService = new Source(queueService,l,"Source Service",0.2);
+	    Source sourceRegular = new Source(cashQueues, l, "Source Regular", 1);
+        Source sourceService = new Source(serviceDeskQueues,l,"Source Service",0.2);
 	    // A sink
 	    Sink si = new Sink("Sink 1");
 	    // A machine
-	    Machine machineRegular = new Machine(queueRegular,si,l,"Machine Regular", 2.6,1.1);
-        Machine machineService = new Machine(queueService,si,l,"Machine Service", 4.1,1.1);
+	    //Machine machineService = new Machine(queueRegular,si,l,"Machine Regular", 2.6,1.1);
+        //Machine machineService = new Machine(queueService,si,l,"Machine Service", 4.1,1.1);
 	    // start the eventlist
 	    l.start(10); // 2000 is maximum time
     }

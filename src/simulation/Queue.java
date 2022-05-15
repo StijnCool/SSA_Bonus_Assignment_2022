@@ -13,13 +13,16 @@ public class Queue implements ProductAcceptor
 	private ArrayList<Product> row;
 	/** Requests from machine that will be handling the products */
 	private ArrayList<Machine> requests;
+	private boolean working;
+	private String type;
 	
 	/**
 	*	Initializes the queue and introduces a dummy machine
 	*	the machine has to be specified later
 	*/
-	public Queue()
+	public Queue(String queue_type)
 	{
+		type = queue_type;
 		row = new ArrayList<>();
 		requests = new ArrayList<>();
 	}
@@ -37,6 +40,9 @@ public class Queue implements ProductAcceptor
 			if(machine.giveProduct(row.get(0)))
 			{
 				row.remove(0);// Remove it from the queue
+				if (row.size()==0 && type == "switching"){
+					working = false;
+				}
 				return true;
 			}
 			else
@@ -45,6 +51,7 @@ public class Queue implements ProductAcceptor
 		else
 		{
 			requests.add(machine);
+
 			return false; // queue request
 		}
 	}
@@ -71,5 +78,17 @@ public class Queue implements ProductAcceptor
 				row.add(p); // Otherwise store it
 		}
 		return true;
+	}
+
+	public int getSize() {
+		return row.size();
+	}
+
+	public void setToWork() {
+		working = true;
+	}
+
+	public boolean getWorking() {
+		return working;
 	}
 }
