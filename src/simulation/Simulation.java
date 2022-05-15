@@ -19,7 +19,7 @@ public class Simulation {
     public Sink sink;
     public Machine mach;
 
-    private static Random generator = new Random(314159);
+    private final static Random generator = new Random(314159);
 	
 
         /**
