@@ -134,7 +134,7 @@ public class Source implements CProcess
 		} else {
 			System.out.println("Arrival at queue " + 6 + " time = " + tme);
 			int row_size = queues.get(0).getSize() + queues.get(1).getSize();
-			System.out.println("Q5: " + row_size);
+			System.out.println("Q6: " + row_size);
 		}
 
 
