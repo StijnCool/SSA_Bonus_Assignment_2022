@@ -23,6 +23,11 @@ public class Queue implements ProductAcceptor
 	public Queue(String queue_type)
 	{
 		type = queue_type;
+		if (queue_type=="open"){
+			working = true;
+		} else {
+			working = false;
+		}
 		row = new ArrayList<>();
 		requests = new ArrayList<>();
 	}

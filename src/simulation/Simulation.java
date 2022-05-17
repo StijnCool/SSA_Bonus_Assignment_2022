@@ -63,17 +63,24 @@ public class Simulation {
         Queue queueCash5 = new Queue("switching");
 
         ArrayList<Queue> cashQueues = new ArrayList<>(Arrays.asList(queueCash1, queueCash2, queueCash3, queueCash4, queueCash5, queueCashService, queueService));
-        ArrayList<Queue> serviceDeskQueues = new ArrayList<>(Arrays.asList(queueService));
+        ArrayList<Queue> serviceDeskQueues = new ArrayList<>(Arrays.asList(queueService, queueCashService));
 	    // A source
 	    Source sourceRegular = new Source(cashQueues, l, "Source Regular", 1);
         Source sourceService = new Source(serviceDeskQueues,l,"Source Service",0.2);
 	    // A sink
 	    Sink si = new Sink("Sink 1");
 	    // A machine
-	    //Machine machineService = new Machine(queueRegular,si,l,"Machine Regular", 2.6,1.1);
-        //Machine machineService = new Machine(queueService,si,l,"Machine Service", 4.1,1.1);
+
+
+        // TODO Make it possible that two queues join in one machine with priority to one queue (multiple constructors with type variable?)
+	    Machine machineCash1 = new Machine(queueCash1,si,l,"Machine Cash 1", 2.6,1.1, "single");
+        Machine machineCash2 = new Machine(queueCash2,si,l,"Machine Cash 2", 2.6,1.1, "single");
+        Machine machineCash3 = new Machine(queueCash3,si,l,"Machine Cash 3", 2.6,1.1, "single");
+        Machine machineCash4 = new Machine(queueCash4,si,l,"Machine Cash 4", 2.6,1.1, "single");
+        Machine machineCash5 = new Machine(queueCash5,si,l,"Machine Cash 5", 2.6,1.1, "single");
+        Machine machineService = new Machine(serviceDeskQueues,si,l,"Machine Service", new double[]{4.1, 2.6},new double[]{1.1, 1.1}, "both");
 	    // start the eventlist
-	    l.start(10); // 2000 is maximum time
+	    l.start(100); // 2000 is maximum time
     }
 
     /**

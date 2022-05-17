@@ -106,7 +106,7 @@ public class Source implements CProcess
 	public void execute(int type, double tme)
 	{
 		// show arrival
-		System.out.println("Arrival at time = " + tme);
+
 		// give arrived product to queue
 		Product p = new Product();
 		p.stamp(tme,"Creation",name);
@@ -114,7 +114,42 @@ public class Source implements CProcess
 		// TODO make it choose the correct queue
 		int queue_num = choose_queue(queues);
 
+
+		//System.out.println("Q1: " + queues.get(0).getSize() + "Q2: " + queues.get(1).getSize() + "Q3: " + queues.get(2).getSize() + "Q4: " + queues.get(3).getSize() +"Q5: " + queues.get(4).getSize() +"QS: " + (queues.get(5).getSize() + queues.get(6).getSize()));
+
+
+
 		queues.get(queue_num).giveProduct(p);
+
+		if (queues.size()==7){
+			System.out.println("Arrival at queue " + queue_num + " time = " + tme);
+			for (int i = 0; i < queues.size()-1; i++) {
+				if (i==5){
+					int row_size = queues.get(i).getSize()+queues.get(i+1).getSize();
+					System.out.print("Q" + i + ": " + row_size + "\n");
+				} else {
+					System.out.print("Q" + i + ": " + queues.get(i).getSize() + " ");
+				}
+			}
+		} else {
+			System.out.println("Arrival at queue " + 6 + " time = " + tme);
+			int row_size = queues.get(0).getSize() + queues.get(1).getSize();
+			System.out.println("Q5: " + row_size);
+		}
+
+
+		/*
+		for (int i = 0; i < queues.size()-1; i++) {
+			if (i==5){
+				int row_size = queues.get(i).getSize()+queues.get(i+1).getSize();
+				System.out.print("Q" + i + ": " + row_size + "\n");
+			} else {
+				System.out.print("Q" + i + ": " + queues.get(i).getSize() + " ");
+			}
+		}
+		*/
+
+		//System.out.println("Q1: " + queues.get(0).getSize() + "Q2: " + queues.get(1).getSize() + "Q3: " + queues.get(2).getSize() + "Q4: " + queues.get(3).getSize() +"Q5: " + queues.get(4).getSize() +"QS: " + (queues.get(5).getSize() + queues.get(6).getSize()));
 
 		// generate duration
 		if(1/arrivalRate>0)
@@ -138,25 +173,29 @@ public class Source implements CProcess
 	}
 
 	private int choose_queue(ArrayList<Queue> queues) {
-		Queue smallest = queues.get(0);
+		if (queues.size()==2){
+			return 0;
+		}
+
+		int smallest = queues.get(0).getSize();
 		int smallestNum = 0;
 
 		for (int i = 0; i < queues.size()-1; i++){
 			if (i==5){
 				int rows_service = queues.get(5).getSize() + queues.get(6).getSize();
-				if (queues.get(i).getSize() < smallest.getSize()) {
-					smallest = queues.get(i);
+				if (rows_service < smallest) {
+					smallest = rows_service;
 					smallestNum = 5;
 				}
 			} else if (queues.get(i).getWorking() == true) {
-				if(queues.get(i).getSize() < smallest.getSize()){
-					smallest = queues.get(i);
+				if(queues.get(i).getSize() < smallest){
+					smallest = queues.get(i).getSize();
 					smallestNum = i;
 				}
 			}
 		}
 
-		if (smallest.getSize()==4){
+		if (smallest>=4){
 			for (int i = 0; i < queues.size()-1; i++){
 				if (queues.get(i).getWorking() == false) {
 					queues.get(i).setToWork();

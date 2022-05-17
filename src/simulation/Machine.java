@@ -1,5 +1,8 @@
 package simulation;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 /**
  *	Machine in a factory
  *	@author Joel Karel
@@ -13,6 +16,7 @@ public class Machine implements CProcess,ProductAcceptor
 	private final CEventList eventlist;
 	/** Queue from which the machine has to take products */
 	private Queue queue;
+	private ArrayList<Queue> queue_service;
 	/** Sink to dump products */
 	private ProductAcceptor sink;
 	/** Status of the machine (b=busy, i=idle) */
@@ -26,7 +30,11 @@ public class Machine implements CProcess,ProductAcceptor
 	/** Processing time iterator */
 	private int procCnt;
 	private double mean;
+	private double[] mean_2;
 	private double STD;
+	private double[] STD_2;
+
+	private String type;
 
 	/**
 	 *	Constructor
@@ -36,7 +44,7 @@ public class Machine implements CProcess,ProductAcceptor
 	 *	@param e	Eventlist that will manage events
 	 *	@param n	The name of the machine
 	 */
-	public Machine(Queue q, ProductAcceptor s, CEventList e, String n, double _mean, double _STD)
+	public Machine(Queue q, ProductAcceptor s, CEventList e, String n, double _mean, double _STD, String _type)
 	{
 		status='i';
 		queue=q;
@@ -46,6 +54,18 @@ public class Machine implements CProcess,ProductAcceptor
 		mean = _mean;
 		STD = _STD;
 		queue.askProduct(this);
+		type = _type;
+	}
+
+	public Machine(ArrayList<Queue> q, ProductAcceptor s, CEventList e, String n, double[] _mean, double[] _STD, String _type){
+		status='i';
+		queue_service = q;
+		sink=s;
+		eventlist=e;
+		name=n;
+		mean_2 = _mean;
+		STD_2 = _STD;
+		type = _type;
 	}
 
 	/**
@@ -117,7 +137,7 @@ public class Machine implements CProcess,ProductAcceptor
 	public void execute(int type, double tme)
 	{
 		// show arrival
-		System.out.println("Product finished at time = " + tme);
+		System.out.println("Product finished at " + this.name + " at time = " + tme );
 		// Remove product from system
 		product.stamp(tme,"Production complete",name);
 		sink.giveProduct(product);
@@ -125,7 +145,16 @@ public class Machine implements CProcess,ProductAcceptor
 		// set machine status to idle
 		status='i';
 		// Ask the queue for products
-		queue.askProduct(this);
+		if (this.type.equals("single")) {
+			queue.askProduct(this);
+		} else {
+			if(queue_service.get(0).getSize() != 0){
+				queue_service.get(0).askProduct(this);
+			} else {
+				queue_service.get(1).askProduct(this);
+			}
+		}
+
 	}
 	
 	/**
@@ -192,5 +221,9 @@ public class Machine implements CProcess,ProductAcceptor
 		// Convert it into a exponentially distributed random variate with mean 33
 		double res = -mean*Math.log(u);
 		return res;
+	}
+
+	public String getType(){
+		return type;
 	}
 }
