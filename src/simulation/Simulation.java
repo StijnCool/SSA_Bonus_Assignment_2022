@@ -20,6 +20,9 @@ public class Simulation {
     public Sink sink;
     public Machine mach;
 
+    public static List<Double> delayList = new ArrayList();
+    public static List<Double> arrivalTimeList = new ArrayList();
+
     private final static Random generator = new Random(314159);
 	
 
@@ -81,6 +84,9 @@ public class Simulation {
         Machine machineService = new Machine(serviceDeskQueues,si,l,"Machine Service", new double[]{4.1, 2.6},new double[]{1.1, 1.1}, "both");
 	    // start the eventlist
 	    l.start(100); // 2000 is maximum time
+
+        print("");
+        print(arrivalTimeList);
     }
 
     /**

@@ -123,6 +123,7 @@ public class Source implements CProcess
 
 		if (queues.size()==7){
 			System.out.println("Arrival at queue " + queue_num + " time = " + tme);
+			Simulation.arrivalTimeList.add(tme);
 			for (int i = 0; i < queues.size()-1; i++) {
 				if (i==5){
 					int row_size = queues.get(i).getSize()+queues.get(i+1).getSize();
@@ -133,6 +134,7 @@ public class Source implements CProcess
 			}
 		} else {
 			System.out.println("Arrival at queue " + 6 + " time = " + tme);
+			Simulation.arrivalTimeList.add(tme);
 			int row_size = queues.get(0).getSize() + queues.get(1).getSize();
 			System.out.println("Q6: " + row_size);
 		}
