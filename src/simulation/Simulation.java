@@ -20,9 +20,27 @@ public class Simulation {
     public Sink sink;
     public Machine mach;
 
-    public static List<Double> delayList = new ArrayList();
-    public static List<Double> arrivalTimeList = new ArrayList();
+    // TODO: Record delays
+    public static List<Double> delayList = new ArrayList<Double>();
+    public static List<Double> arrivalTimeList = new ArrayList<Double>();
 
+    // TODO: Record service times
+    public static List<Double> serviceTimeList = new ArrayList<Double>();
+
+    /* TODO: Record queue times when they change
+        The nxm+1 matrix takes the following form:
+             t1,#Q1@t1,...,#Qj@t1,...,#Qm@t1
+             ⋮     ⋮          ⋮           ⋮
+            ti,#Q1@ti,...,#Qj@ti,...,#Qm@ti
+            ⋮     ⋮          ⋮           ⋮
+           tm,#Q1@tn,...,#Qj@tn,...,#Qm@tn
+        Where we have at most n queues and a queue length change happens m times
+        ti = the time at the i'th change of queue length
+        #Qj@ti = the number of customers in queue j after the i'th change of queue length
+        For a matrix List<List<Double>> L, L.get(0) should return {l11,...,l1m}, but not {l11,...,ln1}
+        This means the first list should store all rows, and the second list the entries for the columns in that row
+     */
+    public static List<List<Double>> queueMatrix = new ArrayList<List<Double>>();
     private final static Random generator = new Random(314159);
 	
 
