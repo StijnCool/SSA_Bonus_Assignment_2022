@@ -21,10 +21,12 @@ public class Simulation {
     public Machine mach;
 
     // TODO: Record delays
+    // In product.java there is a times arraylist, you could print the delay whenever the product passes the machine
     public static List<Double> delayList = new ArrayList<Double>();
     public static List<Double> arrivalTimeList = new ArrayList<Double>();
 
     // TODO: Record service times
+    // Again, times arraylist in product.java
     public static List<Double> serviceTimeList = new ArrayList<Double>();
 
     /* TODO: Record queue times when they change
@@ -40,6 +42,17 @@ public class Simulation {
         For a matrix List<List<Double>> L, L.get(0) should return {l11,...,l1m}, but not {l11,...,ln1}
         This means the first list should store all rows, and the second list the entries for the columns in that row
      */
+    /*
+    For products arriving and getting into the queue, look at the print statements in source.java - execute
+    If someone goes to the service desk, it only returns the queue for the service desk, so if that happens copy the
+    last row in the matrix and update the time and service desk queue.
+
+    For products leaving the queue, I would suggest looking at queue.java - askProduct and then copying and updating
+    the row according to what queue it is.
+
+    You can get the times from product, as said above. If this doesn't work try getting it where the stamp method is used.
+
+    */
     public static List<List<Double>> queueMatrix = new ArrayList<List<Double>>();
     private final static Random generator = new Random(314159);
 	
