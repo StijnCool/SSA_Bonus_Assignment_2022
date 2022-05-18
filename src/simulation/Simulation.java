@@ -19,9 +19,7 @@ public class Simulation {
     public Source source;
     public Sink sink;
     public Machine mach;
-
-    // TODO: Record delays
-    // In product.java there is a times arraylist, you could print the delay whenever the product passes the machine
+    
     public static List<Double> delayList = new ArrayList<Double>();
     public static List<Double> arrivalTimeList = new ArrayList<Double>();
 
@@ -118,6 +116,9 @@ public class Simulation {
 
         print("");
         print(arrivalTimeList);
+        print(arrivalTimeList.size());
+        print(delayList);
+        print(delayList.size());
     }
 
     /**
