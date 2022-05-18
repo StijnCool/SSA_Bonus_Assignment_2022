@@ -6,7 +6,6 @@
 
 package simulation;
 
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -20,20 +19,24 @@ public class Simulation {
     public Sink sink;
     public Machine mach;
 
-    public static List<Double> delayList = new ArrayList<Double>();
-    public static List<Double> arrivalTimeList = new ArrayList<Double>();
-    public static List<Double> serviceTimeList = new ArrayList<Double>();
+
+    public static List<Double> delayNormalList = new ArrayList<>();
+    public static List<Double> delayServiceList = new ArrayList<>();
+    public static List<Double> arrivalTimeList = new ArrayList<>();
+    public static List<Double> serviceTimeNormalList = new ArrayList<>();
+    public static List<Double> serviceTimeServiceList = new ArrayList<>();
 
     /* TODO: Record queue times when they change
         The nxm+1 matrix takes the following form:
-             t1,#Q1@t1,...,#Qj@t1,...,#Qm@t1
-             ⋮     ⋮          ⋮           ⋮
-            ti,#Q1@ti,...,#Qj@ti,...,#Qm@ti
-            ⋮     ⋮          ⋮           ⋮
-           tm,#Q1@tn,...,#Qj@tn,...,#Qm@tn
+             t1,#Q1@t1,...,#Qj@t1,...,#Qm@t1,id1
+             ⋮     ⋮          ⋮           ⋮    ⋮
+            ti,#Q1@ti,...,#Qj@ti,...,#Qm@ti,idi
+            ⋮     ⋮          ⋮           ⋮    ⋮
+           tn,#Q1@tn,...,#Qj@tn,...,#Qm@tn,idn
         Where we have at most n queues and a queue length change happens m times
         ti = the time at the i'th change of queue length
         #Qj@ti = the number of customers in queue j after the i'th change of queue length
+        idi = 1 if i'th queue length change is an arrival, 0 otherwise
         For a matrix List<List<Double>> L, L.get(0) should return {l11,...,l1m}, but not {l11,...,ln1}
         This means the first list should store all rows, and the second list the entries for the columns in that row
      */
@@ -114,10 +117,15 @@ public class Simulation {
         print("");
         print(arrivalTimeList);
         print("arrivalTimeList: " + arrivalTimeList.size());
-        print(delayList);
-        print("delayList: " + delayList.size());
-        print(serviceTimeList);
-        print("serviceTimeList: " + serviceTimeList.size());
+        print(delayNormalList);
+        print("delayNormalList: " + delayNormalList.size());
+        print(delayServiceList);
+        print("delayServiceList: " + delayServiceList.size());
+        print(serviceTimeNormalList);
+        print("serviceTimeNormalList: " + serviceTimeNormalList.size());
+        print(serviceTimeServiceList);
+        print("serviceTimeServiceList: " + serviceTimeServiceList.size());
+        print_matrix(queueMatrix);
     }
 
     /**
@@ -149,6 +157,12 @@ public class Simulation {
 
     private static <T> void print(T s){
         System.out.println(s);
+    }
+
+    public static void print_matrix(List<List<Double>> M){
+        for (List<Double> l : M) {
+            print(l);
+        }
     }
     
 }

@@ -1,6 +1,8 @@
 package simulation;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  *	A source of products
