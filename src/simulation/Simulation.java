@@ -19,12 +19,9 @@ public class Simulation {
     public Source source;
     public Sink sink;
     public Machine mach;
-    
+
     public static List<Double> delayList = new ArrayList<Double>();
     public static List<Double> arrivalTimeList = new ArrayList<Double>();
-
-    // TODO: Record service times
-    // Again, times arraylist in product.java
     public static List<Double> serviceTimeList = new ArrayList<Double>();
 
     /* TODO: Record queue times when they change
@@ -112,13 +109,15 @@ public class Simulation {
         Machine machineCash5 = new Machine(queueCash5,si,l,"Machine Cash 5", 2.6,1.1, "single");
         Machine machineService = new Machine(serviceDeskQueues,si,l,"Machine Service", new double[]{4.1, 2.6},new double[]{1.1, 1.1}, "both");
 	    // start the eventlist
-	    l.start(100); // 2000 is maximum time
+	    l.start(100);
 
         print("");
         print(arrivalTimeList);
-        print(arrivalTimeList.size());
+        print("arrivalTimeList: " + arrivalTimeList.size());
         print(delayList);
-        print(delayList.size());
+        print("delayList: " + delayList.size());
+        print(serviceTimeList);
+        print("serviceTimeList: " + serviceTimeList.size());
     }
 
     /**
