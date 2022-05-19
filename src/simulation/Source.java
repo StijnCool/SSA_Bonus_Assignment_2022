@@ -1,7 +1,6 @@
 package simulation;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -103,62 +102,49 @@ public class Source implements CProcess {
 	@Override
 	public void execute(int type, double tme) {
 		// show arrival
-
-		// give arrived product to queue
 		Product p = new Product();
 		p.stamp(tme,"Creation", this.name);
 		p.setSourceType(this.name);
 
-		// TODO make it choose the correct queue
-		int queue_num = choose_queue(queues);
+		System.out.println("Source ---> " + ((name.equals("Source Service")) ? "Service Desk Customer Created" : "Regular Customer Created"));
+//		System.out.println(p.getSourceType());
 
+		// Determine which queue the customer will join
+		int queue_num = choose_queue(this.queues);
 
-		//System.out.println("Q1: " + queues.get(0).getSize() + "Q2: " + queues.get(1).getSize() + "Q3: " + queues.get(2).getSize() + "Q4: " + queues.get(3).getSize() +"Q5: " + queues.get(4).getSize() +"QS: " + (queues.get(5).getSize() + queues.get(6).getSize()));
+		System.out.println("Source ---> Send customer to queue " + (p.getSourceType().equals("Source Service") ? "Service" : (queue_num+1)));
 
+		// give arrived product to queue
+		this.queues.get(queue_num).giveProduct(p);
 
+		//TODO remove print statements
+		// these are just for testing purposes to see how long every queue is
+		if (queues.size() == 7) {
+			System.out.println("Arrival at queue " + (queue_num+1) + " was at time = " + tme);
 
-		queues.get(queue_num).giveProduct(p);
-
-		// Record times of arrivals and the queue-lengths at time = tme
-		this.recordQueueArrivals(tme);
-
-		if (queues.size()==7) {
-			System.out.println("Arrival at queue " + queue_num + " time = " + tme);
-			Simulation.arrivalTimeList.add(tme);
 			for (int i = 0; i < queues.size()-1; i++) {
 				if (i==5) {
 					int row_size = queues.get(i).getSize()+queues.get(i+1).getSize();
-
-//					System.out.print("Q" + i + ": " + row_size + "\n");
-					System.out.print("Q" + i + ": " + queues.get(i).getSize() + "\n");
+					System.out.print("Q6+S: " + row_size + "\n\n");
 				} else {
-					System.out.print("Q" + i + ": " + queues.get(i).getSize() + " ");
+					System.out.print("Q" + (i+1) + ": " + queues.get(i).getSize() + " ");
 				}
 			}
 		} else {
-			System.out.println("Arrival at queue " + 6 + " time = " + tme);
-			Simulation.arrivalTimeList.add(tme);
+			System.out.println("Arrival at queue " + 6 + "+S was at time = " + tme);
 			int row_size = queues.get(0).getSize() + queues.get(1).getSize();
-
-			System.out.println("Q6: " + queues.get(0).getSize());
+			System.out.println("Q6+S: " + row_size + "\n");
 		}
 
 
-		/*
-		for (int i = 0; i < queues.size()-1; i++) {
-			if (i==5){
-				int row_size = queues.get(i).getSize()+queues.get(i+1).getSize();
-				System.out.print("Q" + i + ": " + row_size + "\n");
-			} else {
-				System.out.print("Q" + i + ": " + queues.get(i).getSize() + " ");
-			}
-		}
-		*/
+		// Record times of arrivals and the queue-lengths at time = tme
+		this.recordQueueArrivals(tme);
+		// Record just the arrival times
+		Simulation.arrivalTimeList.add(tme);
 
-		//System.out.println("Q1: " + queues.get(0).getSize() + "Q2: " + queues.get(1).getSize() + "Q3: " + queues.get(2).getSize() + "Q4: " + queues.get(3).getSize() +"Q5: " + queues.get(4).getSize() +"QS: " + (queues.get(5).getSize() + queues.get(6).getSize()));
 
-		// generate duration
-		if (1/arrivalRate>0) {
+		// Generate duration
+		if (1/arrivalRate > 0) {
 			double duration = Simulation.generate_interarrival_time(arrivalRate);
 			// Create a new event in the eventlist
 			list.add(this,0,tme+duration); //target,type,time
@@ -172,6 +158,56 @@ public class Source implements CProcess {
 		}
 	}
 
+	private int choose_queue(ArrayList<Queue> queues) {
+		if (this.name.equals("Source Service")) {
+			// Always return 0 if customer is from service desk customer source
+			return 0;
+		}
+
+		// Determine which open cash register has the smallest queue
+		int smallest = queues.get(0).getSize();
+		int smallestNum = 0;
+
+		for (int i = 0; i < queues.size()-1; i++) {
+			// Check for all open cash registers which one has the smallest queue
+			if (queues.get(i).getWorking()) {
+				if (i == 5) { // This is the cash register at the service desk
+					int rows_service = queues.get(5).getSize() + queues.get(6).getSize();
+					if (rows_service < smallest) {
+						smallest = rows_service;
+						smallestNum = 5;
+					}
+				} else {
+					if (queues.get(i).getSize() < smallest) {
+						smallest = queues.get(i).getSize();
+						smallestNum = i;
+					}
+				}
+			}
+		}
+
+		// If the smallest queue is bigger or equal to 4, a new cash register will be opened
+		if (smallest >= 4) {
+			for (int i = 0; i < queues.size()-1; i++) {
+				if (!queues.get(i).getWorking()) {
+					queues.get(i).setToWork();
+					return i;
+				}
+			}
+		}
+
+		return smallestNum;
+	}
+
+	public static double drawRandomExponential(double mean) {
+		// draw a [0,1] uniform distributed number
+		double u = Math.random();
+		// Convert it into a exponentially distributed random variate with mean 33
+		double res = -mean*Math.log(u);
+		return res;
+	}
+
+	// Method to record the arrival times
 	private void recordQueueArrivals(double tme) {
 		List<Double> l = new ArrayList<Double>();
 		if (queues.size() > 2) {
@@ -183,7 +219,6 @@ public class Source implements CProcess {
 		} else {
 			List<Double> prev = new ArrayList<>(List.copyOf(Simulation.queueMatrix.get(Simulation.queueMatrix.size() - 1)));
 
-			System.out.println(prev);
 			int length = prev.size();
 			prev.set(0, tme);
 			prev.set(length-3, (double) queues.get(1).getSize());
@@ -193,122 +228,6 @@ public class Source implements CProcess {
 			l.addAll(prev);
 		}
 		Simulation.queueMatrix.add(l);
-		System.out.println("---> "+l);
-	}
-
-	private int choose_queue(ArrayList<Queue> queues) {
-		if (queues.size()==2) {
-			return 0;
-		}
-
-		int smallest = queues.get(0).getSize();
-		int smallestNum = 0;
-
-		for (int i = 0; i < queues.size()-1; i++) {
-			if (i==5) {
-				int rows_service = queues.get(5).getSize() + queues.get(6).getSize();
-				if (rows_service < smallest) {
-					smallest = rows_service;
-					smallestNum = 5;
-				}
-			} else if (queues.get(i).getWorking() == true) {
-				if(queues.get(i).getSize() < smallest){
-					smallest = queues.get(i).getSize();
-					smallestNum = i;
-				}
-			}
-		}
-
-		if (smallest>=4) {
-			for (int i = 0; i < queues.size()-1; i++) {
-				if (!queues.get(i).getWorking()) {
-					queues.get(i).setToWork();
-					return i;
-				}
-			}
-		}
-		return smallestNum;
-
-
-
-		/*
-		int queue_num = 0;
-		int queue_rows = 4;
-		int closed_register_num = 10;
-		int current_rows = 0;
-
-		Queue smallest = queues.get(0);
-		int smallestNum = 0;
-
-		if (queues.size() == 1) {
-			return 0;
-		}
-		int service_desk = queues.get(6).getSize() + queues.get(7).getSize();
-		if (queues.get(2).getSize()==0 && queues.get(3).getSize()==0 && queues.get(4).getSize()==0 && queues.get(5).getSize()==0)
-		if (queues.get(0).getSize() <= 4 && queues.get(1).getSize() <= 4 && service_desk < 4) {
-			int smallest_queue = Math.min(queues.get(0).getSize(), Math.min(queues.get(1).getSize(), queues.get(6).getSize()));
-			if (queues.get(0).getSize() == smallest_queue){
-				return 0;
-			} else if (queues.get(1).getSize() == smallest_queue){
-				return 1;
-			} else {
-				return 6;
-			}
-
-					queues.get(0).getSize() < queues.get(1).getSize()) {
-				return 0;
-			} else {
-				return 1;
-			}
-
-
-		} else {
-			// TODO take into account when to open or close new cash register
-			for (int i = 0; i < queues.size()-1; i++) {
-				if (queues.get(i).getSize() < smallest.getSize()) {
-					smallest = queues.get(i);
-					smallestNum = i;
-				}
-			}
-			return smallestNum;
-		}
-
-
-		for (int i = 0; i<queues.size()-1; i++) {
-			current_rows = queues.get(i).getSize();
-			if (i==6) {
-				//int queue_rows += ;
-			} else if (i==0 && current_rows==0){
-				return 0;
-			} else if (i==1 && current_rows==0){
-				return 1;
-			}
-			if (current_rows<4 && current_rows>0){
-				if (current_rows < queue_rows){
-					queue_num = i;
-					queue_rows = queues.get(i).getSize();
-				}
-			}
-			if (queue_rows==4 && queues.get(i).getSize()==0) {
-				closed_register_num = i;
-			}
-		}
-		if (queue_rows==4 && closed_register_num!=10){
-			queue_num = closed_register_num;
-		}
-		return queues.size();
-
-		*/
-
-
-
-	}
-
-	public static double drawRandomExponential(double mean) {
-		// draw a [0,1] uniform distributed number
-		double u = Math.random();
-		// Convert it into a exponentially distributed random variate with mean 33
-		double res = -mean*Math.log(u);
-		return res;
+		System.out.println("Source ---> Recorded arrival time including queue-lengths: " + l + "\n");
 	}
 }

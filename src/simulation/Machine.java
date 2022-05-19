@@ -58,6 +58,9 @@ public class Machine implements CProcess,ProductAcceptor {
 	public Machine(ArrayList<Queue> q, ProductAcceptor s, CEventList e, String n, double[] _mean, double[] _STD, String _type) {
 		status='i';
 		queue_service = q;
+		for (Queue queue : q) {
+			queue.askProduct(this);
+		}
 		sink=s;
 		eventlist=e;
 		name=n;
@@ -91,7 +94,7 @@ public class Machine implements CProcess,ProductAcceptor {
 	*	@param s	Where to send the completed products
 	*	@param e	Eventlist that will manage events
 	*	@param n	The name of the machine
-	*        @param m	Mean processing time
+	*   @param m	Mean processing time
 	*/
 	public Machine(Queue q, ProductAcceptor s, CEventList e, String n, double m) {
 		status='i';
@@ -110,7 +113,7 @@ public class Machine implements CProcess,ProductAcceptor {
 	*	@param s	Where to send the completed products
 	*	@param e	Eventlist that will manage events
 	*	@param n	The name of the machine
-	*        @param st	service times
+	*   @param st	service times
 	*/
 	public Machine(Queue q, ProductAcceptor s, CEventList e, String n, double[] st) {
 		status='i';
@@ -131,7 +134,8 @@ public class Machine implements CProcess,ProductAcceptor {
 	*/
 	public void execute(int type, double tme) {
 		// show arrival
-		System.out.println("Product finished at " + this.name + " at time = " + tme );
+		System.out.println("Product finished at " + this.name + " at time = " + tme);
+
 		// Remove product from system
 		product.stamp(tme,"Production complete",name);
 
@@ -140,7 +144,7 @@ public class Machine implements CProcess,ProductAcceptor {
 
 		// Record delay for both normal and service desk customers
 		double delay = times.get(1) - times.get(0);
-		if (isNormal()) {
+		if (isRegularCustomer()) {
 			Simulation.delayNormalList.add(delay);
 		} else {
 			Simulation.delayServiceList.add(delay);
@@ -148,18 +152,18 @@ public class Machine implements CProcess,ProductAcceptor {
 
 		// Record service times for both normal and service desk customers
 		double serviceTime = times.get(2) - times.get(1);
-		if (isNormal()) {
+		if (isRegularCustomer()) {
 			Simulation.serviceTimeNormalList.add(serviceTime);
 		} else {
 			System.out.println();
 			Simulation.serviceTimeServiceList.add(serviceTime);
 		}
 
-
+		// Send product to sink since it has been processed
 		sink.giveProduct(product);
-		product=null;
+		product = null;
 		// set machine status to idle
-		status='i';
+		status = 'i';
 		// Ask the queue for products
 		if (this.type.equals("single")) {
 			queue.askProduct(this);
@@ -171,10 +175,6 @@ public class Machine implements CProcess,ProductAcceptor {
 			}
 		}
 	}
-
-	private boolean isNormal() {
-		return this.product.getSourceType().equals("Source Regular");
-	}
 	
 	/**
 	*	Let the machine accept a product and let it start handling it
@@ -184,33 +184,48 @@ public class Machine implements CProcess,ProductAcceptor {
 	@Override
 	public boolean giveProduct(Product p) {
 		// Only accept something if the machine is idle
-		if(status=='i') {
+		if (status == 'i') {
 			// accept the product
-			product=p;
+			product = p;
 			// mark starting time
 			product.stamp(eventlist.getTime(),"Production started",name);
+			System.out.println("Machine ---> Production of " + ((p.getSourceType().equals("Source Service")) ? "Service Desk Customer" : "Regular Customer") + " started at " + name);
 
-			//TODO implement recordQueueLeaving() method:
-			//
+			if (this.type.equals("both")) {
+				if (isRegularCustomer()) {
+					this.queue = this.queue_service.get(1);
+					this.mean = this.mean_2[1];
+					this.STD = this.STD_2[1];
+				} else {
+					this.queue = this.queue_service.get(0);
+					this.mean = this.mean_2[0];
+					this.STD = this.STD_2[0];
+				}
+			}
+
+			//TODO implement recordQueueLeaving() method???
 
 			// start production
 			startProduction();
 			// Flag that the product has arrived
 			return true;
+		} else {
+			// Flag that the product has been rejected
+			return false;
 		}
-		// Flag that the product has been rejected
-		else return false;
+	}
+
+	private boolean isRegularCustomer() {
+		return this.product.getSourceType().equals("Source Regular");
 	}
 
 	private void recordQueueLeaving() {
-
+		//TODO implement?
 	}
-
-//	private int determine
 
 	/**
 	*	Starting routine for the production
-	*	Start the handling of the current product with an exponentionally distributed processingtime with average 30
+	*	Start the handling of the current product with an exponentially distributed processing-time with average 30
 	*	This time is placed in the eventlist
 	*/
 	private void startProduction() {
@@ -221,12 +236,12 @@ public class Machine implements CProcess,ProductAcceptor {
 			double tme = eventlist.getTime();
 			eventlist.add(this,0,tme+duration); //target,type,time
 			// set status to busy
-			status='b';
+			status = 'b';
 		} else {
 			if (processingTimes.length > procCnt) {
 				eventlist.add(this,0,eventlist.getTime()+processingTimes[procCnt]); //target,type,time
 				// set status to busy
-				status='b';
+				status = 'b';
 				procCnt++;
 			} else {
 				eventlist.stop();
@@ -244,5 +259,9 @@ public class Machine implements CProcess,ProductAcceptor {
 
 	public String getType() {
 		return type;
+	}
+
+	public String getName() {
+		return name;
 	}
 }

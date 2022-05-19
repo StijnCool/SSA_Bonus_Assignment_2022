@@ -114,7 +114,7 @@ public class Simulation {
 	    // start the eventlist
 	    l.start(100);
 
-        print("");
+
         print(arrivalTimeList);
         print("arrivalTimeList: " + arrivalTimeList.size());
         print(delayNormalList);
@@ -125,6 +125,7 @@ public class Simulation {
         print("serviceTimeNormalList: " + serviceTimeNormalList.size());
         print(serviceTimeServiceList);
         print("serviceTimeServiceList: " + serviceTimeServiceList.size());
+        System.out.println();
         print_matrix(queueMatrix);
     }
 

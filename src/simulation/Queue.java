@@ -20,14 +20,10 @@ public class Queue implements ProductAcceptor {
 	*	the machine has to be specified later
 	*/
 	public Queue(String queue_type) {
-		type = queue_type;
-		if (queue_type.equals("open")) {
-			working = true;
-		} else {
-			working = false;
-		}
-		row = new ArrayList<>();
-		requests = new ArrayList<>();
+		this.type = queue_type;
+		this.working = queue_type.equals("open");
+		this.row = new ArrayList<>();
+		this.requests = new ArrayList<>();
 	}
 	
 	/**
@@ -59,12 +55,16 @@ public class Queue implements ProductAcceptor {
 	*	It is investigated whether a machine wants the product, otherwise it is stored
 	*/
 	public boolean giveProduct(Product p) {
+		System.out.println("Queue ---> Source type: " + p.getSourceType());
+
 		// Check if the machine accepts it
 		if (requests.size() < 1) {
 			row.add(p); // Otherwise store it
 		} else {
 			boolean delivered = false;
 			while (!delivered & (requests.size() > 0)) {
+				System.out.println("Queue ---> Send customer to " + requests.get(0).getName());
+
 				delivered = requests.get(0).giveProduct(p);
 				// remove the request regardless of whether or not the product has been accepted
 				requests.remove(0);
@@ -85,5 +85,9 @@ public class Queue implements ProductAcceptor {
 
 	public boolean getWorking() {
 		return working;
+	}
+
+	public String getType() {
+		return type;
 	}
 }

@@ -53,7 +53,7 @@ class Product {
 	public double[] getTimesAsArray() {
 		times.trimToSize();
 		double[] tmp = new double[times.size()];
-		for (int i=0; i < times.size(); i++) {
+		for (int i = 0; i < times.size(); i++) {
 			tmp[i] = times.get(i);
 		}
 		return tmp;

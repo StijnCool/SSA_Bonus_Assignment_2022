@@ -34,16 +34,17 @@ public class CEventList implements CProcess {
 	*	@param tme The time at which the event will be executed
 	*/
 	public void add(CProcess target, int type, double tme) {
-		boolean success=false;
+		boolean success = false;
+
 		// First create a new event using the parameters
 		CEvent evnt = new CEvent(target,type,tme);
 
-		// Now it is examened where the event has to be inserted in the list
+		// Now it is examined where the event has to be inserted in the list
 		for (int i = 0; i < events.size(); i++) {
 			// The events are sorted chronologically
 			if (events.get(i).getExecutionTime() > evnt.getExecutionTime()) {
 				// If an event is found in the list that has to be executed after the current event
-				success=true;
+				success = true;
 				// Then the new event is inserted before that element
 				events.add(i,evnt);
 				break;
@@ -62,7 +63,7 @@ public class CEventList implements CProcess {
 	public void start() {
 		// stop criterion
 		while ((events.size()>0) && (!stopFlag)) {
-			// Make the similation time equal to the execution time of the first event in the list that has to be processed
+			// Make the simulation time equal to the execution time of the first event in the list that has to be processed
 			currentTime = events.get(0).getExecutionTime();
 			// Let the element be processed
 			events.get(0).execute();
@@ -80,7 +81,7 @@ public class CEventList implements CProcess {
 		add(this,-1,mx);
 		// stop criterion
 		while ((events.size()>0) && (!stopFlag)) {
-			// Make the similation time equal to the execution time of the first event in the list that has to be processed
+			// Make the simulation time equal to the execution time of the first event in the list that has to be processed
 			currentTime = events.get(0).getExecutionTime();
 			// Let the element be processed
 			events.get(0).execute();
@@ -108,7 +109,7 @@ public class CEventList implements CProcess {
 	*	@param type	The type of the event that has to be executed
 	*	@param tme	The current time
 	*/
-        @Override
+	@Override
 	public void execute(int type, double tme) {
 		if(type==-1)
 			stop();
