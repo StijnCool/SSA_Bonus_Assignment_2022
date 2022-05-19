@@ -55,8 +55,8 @@ public class Simulation {
     private final static Random generator = new Random(314159);
 	
 
-        /**
-     * @param   args    The command line arguments.
+    /**
+     * @param args  The command line arguments.
      */
     public static void main(String[] args) {
 

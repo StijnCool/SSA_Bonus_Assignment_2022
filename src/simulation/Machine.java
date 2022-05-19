@@ -1,6 +1,7 @@
 package simulation;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *	Machine in a factory
@@ -139,6 +140,28 @@ public class Machine implements CProcess,ProductAcceptor
 		System.out.println("Product finished at " + this.name + " at time = " + tme );
 		// Remove product from system
 		product.stamp(tme,"Production complete",name);
+
+		// Add delays to delayList
+		List<Double> times = product.getTimes();
+
+		// Record delay for both normal and service desk customers
+		double delay = times.get(1) - times.get(0);
+		if (isNormal()) {
+			Simulation.delayNormalList.add(delay);
+		} else {
+			Simulation.delayServiceList.add(delay);
+		}
+
+		// Record service times for both normal and service desk customers
+		double serviceTime = times.get(2) - times.get(1);
+		if (isNormal()) {
+			Simulation.serviceTimeNormalList.add(serviceTime);
+		} else {
+			System.out.println();
+			Simulation.serviceTimeServiceList.add(serviceTime);
+		}
+
+
 		sink.giveProduct(product);
 		product=null;
 		// set machine status to idle
@@ -153,7 +176,10 @@ public class Machine implements CProcess,ProductAcceptor
 				queue_service.get(1).askProduct(this);
 			}
 		}
+	}
 
+	private boolean isNormal() {
+		return this.product.getSourceType().equals("Source Regular");
 	}
 	
 	/**
@@ -161,7 +187,7 @@ public class Machine implements CProcess,ProductAcceptor
 	*	@param p	The product that is offered
 	*	@return	true if the product is accepted and started, false in all other cases
 	*/
-        @Override
+	@Override
 	public boolean giveProduct(Product p)
 	{
 		// Only accept something if the machine is idle
@@ -171,6 +197,10 @@ public class Machine implements CProcess,ProductAcceptor
 			product=p;
 			// mark starting time
 			product.stamp(eventlist.getTime(),"Production started",name);
+
+			//TODO implement recordQueueLeaving() method:
+			//
+
 			// start production
 			startProduction();
 			// Flag that the product has arrived
@@ -179,6 +209,12 @@ public class Machine implements CProcess,ProductAcceptor
 		// Flag that the product has been rejected
 		else return false;
 	}
+
+	private void recordQueueLeaving() {
+
+	}
+
+//	private int determine
 	
 	/**
 	*	Starting routine for the production

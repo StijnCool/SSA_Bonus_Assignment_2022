@@ -104,14 +104,15 @@ public class Source implements CProcess
 		list.add(this,0,interarrivalTimes[0]); //target,type,time
 	}
 	
-        @Override
+	@Override
 	public void execute(int type, double tme)
 	{
 		// show arrival
 
 		// give arrived product to queue
 		Product p = new Product();
-		p.stamp(tme,"Creation",name);
+		p.stamp(tme,"Creation", this.name);
+		p.setSourceType(this.name);
 
 		// TODO make it choose the correct queue
 		int queue_num = choose_queue(queues);
@@ -119,17 +120,20 @@ public class Source implements CProcess
 
 		//System.out.println("Q1: " + queues.get(0).getSize() + "Q2: " + queues.get(1).getSize() + "Q3: " + queues.get(2).getSize() + "Q4: " + queues.get(3).getSize() +"Q5: " + queues.get(4).getSize() +"QS: " + (queues.get(5).getSize() + queues.get(6).getSize()));
 
-
-
 		queues.get(queue_num).giveProduct(p);
 
-		if (queues.size()==7){
+		// Record times of arrivals and the queue-lengths at time = tme
+		this.recordQueueArrivals(tme);
+
+		if (queues.size()==7) {
 			System.out.println("Arrival at queue " + queue_num + " time = " + tme);
 			Simulation.arrivalTimeList.add(tme);
 			for (int i = 0; i < queues.size()-1; i++) {
-				if (i==5){
+				if (i==5) {
 					int row_size = queues.get(i).getSize()+queues.get(i+1).getSize();
-					System.out.print("Q" + i + ": " + row_size + "\n");
+
+//					System.out.print("Q" + i + ": " + row_size + "\n");
+					System.out.print("Q" + i + ": " + queues.get(i).getSize() + "\n");
 				} else {
 					System.out.print("Q" + i + ": " + queues.get(i).getSize() + " ");
 				}
@@ -138,7 +142,8 @@ public class Source implements CProcess
 			System.out.println("Arrival at queue " + 6 + " time = " + tme);
 			Simulation.arrivalTimeList.add(tme);
 			int row_size = queues.get(0).getSize() + queues.get(1).getSize();
-			System.out.println("Q6: " + row_size);
+
+			System.out.println("Q6: " + queues.get(0).getSize());
 		}
 
 
@@ -174,6 +179,30 @@ public class Source implements CProcess
 				list.stop();
 			}
 		}
+	}
+
+	private void recordQueueArrivals(double tme) {
+		List<Double> l = new ArrayList<Double>();
+		if (queues.size() > 2) {
+			l.add(tme);
+			for (int i = 0; i < queues.size(); i++) {
+				l.add((double) queues.get(i).getSize());
+			}
+			l.add(1.0);
+		} else {
+			List<Double> prev = new ArrayList<>(List.copyOf(Simulation.queueMatrix.get(Simulation.queueMatrix.size() - 1)));
+
+			System.out.println(prev);
+			int length = prev.size();
+			prev.set(0, tme);
+			prev.set(length-3, (double) queues.get(1).getSize());
+			prev.set(length-2, (double) queues.get(0).getSize());
+			prev.set(length-1, 1.0);
+
+			l.addAll(prev);
+		}
+		Simulation.queueMatrix.add(l);
+		System.out.println("---> "+l);
 	}
 
 	private int choose_queue(ArrayList<Queue> queues) {

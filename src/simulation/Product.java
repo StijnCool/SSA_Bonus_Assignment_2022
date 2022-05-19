@@ -12,6 +12,7 @@ class Product
 	private ArrayList<Double> times;
 	private ArrayList<String> events;
 	private ArrayList<String> stations;
+	private String source = "";
 	
 	/** 
 	*	Constructor for the product
@@ -30,6 +31,14 @@ class Product
 		times.add(time);
 		events.add(event);
 		stations.add(station);
+	}
+
+	public void setSourceType(String source) {
+		this.source = source;
+	}
+
+	public String getSourceType() {
+		return this.source;
 	}
 	
 	public ArrayList<Double> getTimes()
