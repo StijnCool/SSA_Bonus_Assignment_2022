@@ -6,8 +6,7 @@
  */
 package simulation;
 
-public class CEvent
-{
+public class CEvent {
 	/** The object involved with the event */
 	private CProcess target;
 	/** The type of the event */
@@ -21,8 +20,7 @@ public class CEvent
 	*	@param tp	The type of the event
 	*	@param tme	The time on which the event will be executed
 	*/
-	public CEvent(CProcess dl,int tp, double tme)
-	{
+	public CEvent(CProcess dl,int tp, double tme) {
 		target=dl;
 		type=tp;
 		executionTime=tme;
@@ -31,8 +29,7 @@ public class CEvent
 	/**
 	*	Method to signal the target to execute an event
 	*/
-	public void execute()
-	{
+	public void execute() {
 		target.execute(type,executionTime);
 	}
 	
@@ -40,8 +37,7 @@ public class CEvent
 	*	Method to ask the event at which time it will be executed
 	*	@return	The time at which the event will be executed
 	*/
-	public double getExecutionTime()
-	{
+	public double getExecutionTime() {
 		return executionTime;
 	}
 }

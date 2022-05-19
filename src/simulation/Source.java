@@ -11,8 +11,7 @@ import java.util.List;
  *	@author Joel Karel
  *	@version %I%, %G%
  */
-public class Source implements CProcess
-{
+public class Source implements CProcess {
 	/** Eventlist that will be requested to construct events */
 	private CEventList list;
 	/** Queue that buffers products for the machine */
@@ -34,8 +33,7 @@ public class Source implements CProcess
 	 *	@param l	The eventlist that is requested to construct events
 	 *	@param n	Name of object
 	 */
-	public Source(ArrayList<Queue> q, CEventList l, String n, double _arrivalRate)
-	{
+	public Source(ArrayList<Queue> q, CEventList l, String n, double _arrivalRate) {
 		list = l;
 		queues = q;
 		name = n;
@@ -53,8 +51,7 @@ public class Source implements CProcess
 	*	@param l	The eventlist that is requested to construct events
 	*	@param n	Name of object
 	*/
-	public Source(ArrayList<Queue> q,CEventList l,String n)
-	{
+	public Source(ArrayList<Queue> q,CEventList l,String n) {
 		list = l;
 		queues = q;
 		name = n;
@@ -92,8 +89,7 @@ public class Source implements CProcess
 	*	@param n	Name of object
 	*	@param ia	interarrival times
 	*/
-	public Source(ArrayList<Queue> q,CEventList l,String n,double[] ia)
-	{
+	public Source(ArrayList<Queue> q,CEventList l,String n,double[] ia) {
 		list = l;
 		queues = q;
 		name = n;
@@ -105,8 +101,7 @@ public class Source implements CProcess
 	}
 	
 	@Override
-	public void execute(int type, double tme)
-	{
+	public void execute(int type, double tme) {
 		// show arrival
 
 		// give arrived product to queue
@@ -119,6 +114,8 @@ public class Source implements CProcess
 
 
 		//System.out.println("Q1: " + queues.get(0).getSize() + "Q2: " + queues.get(1).getSize() + "Q3: " + queues.get(2).getSize() + "Q4: " + queues.get(3).getSize() +"Q5: " + queues.get(4).getSize() +"QS: " + (queues.get(5).getSize() + queues.get(6).getSize()));
+
+
 
 		queues.get(queue_num).giveProduct(p);
 
@@ -161,21 +158,15 @@ public class Source implements CProcess
 		//System.out.println("Q1: " + queues.get(0).getSize() + "Q2: " + queues.get(1).getSize() + "Q3: " + queues.get(2).getSize() + "Q4: " + queues.get(3).getSize() +"Q5: " + queues.get(4).getSize() +"QS: " + (queues.get(5).getSize() + queues.get(6).getSize()));
 
 		// generate duration
-		if(1/arrivalRate>0)
-		{
+		if (1/arrivalRate>0) {
 			double duration = Simulation.generate_interarrival_time(arrivalRate);
 			// Create a new event in the eventlist
 			list.add(this,0,tme+duration); //target,type,time
-		}
-		else
-		{
+		} else {
 			interArrCnt++;
-			if(interarrivalTimes.length>interArrCnt)
-			{
+			if(interarrivalTimes.length > interArrCnt) {
 				list.add(this,0,tme+interarrivalTimes[interArrCnt]); //target,type,time
-			}
-			else
-			{
+			} else {
 				list.stop();
 			}
 		}
@@ -206,15 +197,15 @@ public class Source implements CProcess
 	}
 
 	private int choose_queue(ArrayList<Queue> queues) {
-		if (queues.size()==2){
+		if (queues.size()==2) {
 			return 0;
 		}
 
 		int smallest = queues.get(0).getSize();
 		int smallestNum = 0;
 
-		for (int i = 0; i < queues.size()-1; i++){
-			if (i==5){
+		for (int i = 0; i < queues.size()-1; i++) {
+			if (i==5) {
 				int rows_service = queues.get(5).getSize() + queues.get(6).getSize();
 				if (rows_service < smallest) {
 					smallest = rows_service;
@@ -228,9 +219,9 @@ public class Source implements CProcess
 			}
 		}
 
-		if (smallest>=4){
-			for (int i = 0; i < queues.size()-1; i++){
-				if (queues.get(i).getWorking() == false) {
+		if (smallest>=4) {
+			for (int i = 0; i < queues.size()-1; i++) {
+				if (!queues.get(i).getWorking()) {
 					queues.get(i).setToWork();
 					return i;
 				}
@@ -313,8 +304,7 @@ public class Source implements CProcess
 
 	}
 
-	public static double drawRandomExponential(double mean)
-	{
+	public static double drawRandomExponential(double mean) {
 		// draw a [0,1] uniform distributed number
 		double u = Math.random();
 		// Convert it into a exponentially distributed random variate with mean 33

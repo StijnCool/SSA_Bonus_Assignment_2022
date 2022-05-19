@@ -6,8 +6,7 @@ import java.util.ArrayList;
  *	@author Joel Karel
  *	@version %I%, %G%
  */
-class Product
-{
+class Product {
 	/** Stamps for the products */
 	private ArrayList<Double> times;
 	private ArrayList<String> events;
@@ -18,16 +17,14 @@ class Product
 	*	Constructor for the product
 	*	Mark the time at which it is created
 	*/
-	public Product()
-	{
+	public Product() {
 		times = new ArrayList<>();
 		events = new ArrayList<>();
 		stations = new ArrayList<>();
 	}
 	
 	
-	public void stamp(double time,String event,String station)
-	{
+	public void stamp(double time,String event,String station) {
 		times.add(time);
 		events.add(event);
 		stations.add(station);
@@ -41,41 +38,34 @@ class Product
 		return this.source;
 	}
 	
-	public ArrayList<Double> getTimes()
-	{
+	public ArrayList<Double> getTimes() {
 		return times;
 	}
 
-	public ArrayList<String> getEvents()
-	{
+	public ArrayList<String> getEvents() {
 		return events;
 	}
 
-	public ArrayList<String> getStations()
-	{
+	public ArrayList<String> getStations() {
 		return stations;
 	}
 	
-	public double[] getTimesAsArray()
-	{
+	public double[] getTimesAsArray() {
 		times.trimToSize();
 		double[] tmp = new double[times.size()];
-		for (int i=0; i < times.size(); i++)
-		{
-			tmp[i] = (times.get(i)).doubleValue();
+		for (int i=0; i < times.size(); i++) {
+			tmp[i] = times.get(i);
 		}
 		return tmp;
 	}
 
-	public String[] getEventsAsArray()
-	{
+	public String[] getEventsAsArray() {
 		String[] tmp = new String[events.size()];
 		tmp = events.toArray(tmp);
 		return tmp;
 	}
 
-	public String[] getStationsAsArray()
-	{
+	public String[] getStationsAsArray() {
 		String[] tmp = new String[stations.size()];
 		tmp = stations.toArray(tmp);
 		return tmp;

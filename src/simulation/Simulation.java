@@ -51,12 +51,12 @@ public class Simulation {
     You can get the times from product, as said above. If this doesn't work try getting it where the stamp method is used.
 
     */
-    public static List<List<Double>> queueMatrix = new ArrayList<List<Double>>();
+    public static List<List<Double>> queueMatrix = new ArrayList<>();
     private final static Random generator = new Random(314159);
 	
 
     /**
-     * @param args  The command line arguments.
+     * @param args The command line arguments.
      */
     public static void main(String[] args) {
 
@@ -130,10 +130,10 @@ public class Simulation {
 
     /**
      * Method to generate an interarrival time according to Poisson process
-     * @param arrivalRate  double  The arrival rate lambda of the poisson process
+     * @param arrivalRate   double  The arrival rate lambda of the poisson process
      * @return              double  The generated interarrival time in seconds
      */
-    public static double generate_interarrival_time(double arrivalRate){
+    public static double generate_interarrival_time(double arrivalRate) {
         // Poisson arrival times lead to exponential interarrival times
         double U = generator.nextDouble();
         double X = -1/arrivalRate*Math.log(1-U);
@@ -143,10 +143,10 @@ public class Simulation {
     /**
      * Method to generate a service time according to normal distribution
      * @param mean                  double  The mean of the normal distribution
-     * @param standardDeviation    double  The standard deviation of the normal distribution
+     * @param standardDeviation     double  The standard deviation of the normal distribution
      * @return                      double  The generated service time
      */
-    public static double generate_service_time(double mean, double standardDeviation,double minimumServiceTime){
+    public static double generate_service_time(double mean, double standardDeviation,double minimumServiceTime) {
         // Generate using Box-Muller Transform
         double U1 = generator.nextDouble();
         double U2 = generator.nextDouble();
@@ -155,11 +155,11 @@ public class Simulation {
         return Math.max(X,minimumServiceTime);
     }
 
-    private static <T> void print(T s){
+    private static <T> void print(T s) {
         System.out.println(s);
     }
 
-    public static void print_matrix(List<List<Double>> M){
+    public static void print_matrix(List<List<Double>> M) {
         for (List<Double> l : M) {
             print(l);
         }

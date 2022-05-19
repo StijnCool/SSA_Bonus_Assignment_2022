@@ -8,8 +8,7 @@ import java.util.List;
  *	@author Joel Karel
  *	@version %I%, %G%
  */
-public class Machine implements CProcess,ProductAcceptor
-{
+public class Machine implements CProcess,ProductAcceptor {
 	/** Product that is being handled  */
 	private Product product;
 	/** Eventlist that will manage events */
@@ -44,8 +43,7 @@ public class Machine implements CProcess,ProductAcceptor
 	 *	@param e	Eventlist that will manage events
 	 *	@param n	The name of the machine
 	 */
-	public Machine(Queue q, ProductAcceptor s, CEventList e, String n, double _mean, double _STD, String _type)
-	{
+	public Machine(Queue q, ProductAcceptor s, CEventList e, String n, double _mean, double _STD, String _type) {
 		status='i';
 		queue=q;
 		sink=s;
@@ -57,7 +55,7 @@ public class Machine implements CProcess,ProductAcceptor
 		type = _type;
 	}
 
-	public Machine(ArrayList<Queue> q, ProductAcceptor s, CEventList e, String n, double[] _mean, double[] _STD, String _type){
+	public Machine(ArrayList<Queue> q, ProductAcceptor s, CEventList e, String n, double[] _mean, double[] _STD, String _type) {
 		status='i';
 		queue_service = q;
 		sink=s;
@@ -76,8 +74,7 @@ public class Machine implements CProcess,ProductAcceptor
 	*	@param e	Eventlist that will manage events
 	*	@param n	The name of the machine
 	*/
-	public Machine(Queue q, ProductAcceptor s, CEventList e, String n)
-	{
+	public Machine(Queue q, ProductAcceptor s, CEventList e, String n) {
 		status='i';
 		queue=q;
 		sink=s;
@@ -96,8 +93,7 @@ public class Machine implements CProcess,ProductAcceptor
 	*	@param n	The name of the machine
 	*        @param m	Mean processing time
 	*/
-	public Machine(Queue q, ProductAcceptor s, CEventList e, String n, double m)
-	{
+	public Machine(Queue q, ProductAcceptor s, CEventList e, String n, double m) {
 		status='i';
 		queue=q;
 		sink=s;
@@ -116,8 +112,7 @@ public class Machine implements CProcess,ProductAcceptor
 	*	@param n	The name of the machine
 	*        @param st	service times
 	*/
-	public Machine(Queue q, ProductAcceptor s, CEventList e, String n, double[] st)
-	{
+	public Machine(Queue q, ProductAcceptor s, CEventList e, String n, double[] st) {
 		status='i';
 		queue=q;
 		sink=s;
@@ -134,8 +129,7 @@ public class Machine implements CProcess,ProductAcceptor
 	*	@param type	The type of the event that has to be executed
 	*	@param tme	The current time
 	*/
-	public void execute(int type, double tme)
-	{
+	public void execute(int type, double tme) {
 		// show arrival
 		System.out.println("Product finished at " + this.name + " at time = " + tme );
 		// Remove product from system
@@ -188,11 +182,9 @@ public class Machine implements CProcess,ProductAcceptor
 	*	@return	true if the product is accepted and started, false in all other cases
 	*/
 	@Override
-	public boolean giveProduct(Product p)
-	{
+	public boolean giveProduct(Product p) {
 		// Only accept something if the machine is idle
-		if(status=='i')
-		{
+		if(status=='i') {
 			// accept the product
 			product=p;
 			// mark starting time
@@ -215,42 +207,34 @@ public class Machine implements CProcess,ProductAcceptor
 	}
 
 //	private int determine
-	
+
 	/**
 	*	Starting routine for the production
 	*	Start the handling of the current product with an exponentionally distributed processingtime with average 30
 	*	This time is placed in the eventlist
 	*/
-	private void startProduction()
-	{
+	private void startProduction() {
 		// generate duration
-		if(mean>0)
-		{
+		if (mean > 0) {
 			double duration = Simulation.generate_service_time(mean,STD,1/60);
 			// Create a new event in the eventlist
 			double tme = eventlist.getTime();
 			eventlist.add(this,0,tme+duration); //target,type,time
 			// set status to busy
 			status='b';
-		}
-		else
-		{
-			if(processingTimes.length>procCnt)
-			{
+		} else {
+			if (processingTimes.length > procCnt) {
 				eventlist.add(this,0,eventlist.getTime()+processingTimes[procCnt]); //target,type,time
 				// set status to busy
 				status='b';
 				procCnt++;
-			}
-			else
-			{
+			} else {
 				eventlist.stop();
 			}
 		}
 	}
 
-	public static double drawRandomExponential(double mean)
-	{
+	public static double drawRandomExponential(double mean) {
 		// draw a [0,1] uniform distributed number
 		double u = Math.random();
 		// Convert it into a exponentially distributed random variate with mean 33
@@ -258,7 +242,7 @@ public class Machine implements CProcess,ProductAcceptor
 		return res;
 	}
 
-	public String getType(){
+	public String getType() {
 		return type;
 	}
 }
