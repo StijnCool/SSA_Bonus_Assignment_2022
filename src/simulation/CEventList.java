@@ -9,8 +9,7 @@ import java.util.ArrayList;
  *	@author Joel Karel
  *	@version %I%, %G%
  */
-public class CEventList implements CProcess
-{
+public class CEventList implements CProcess {
 	/** The time in the simulation */
 	private double currentTime;
 	/** List of events that have to be executed */
@@ -22,8 +21,7 @@ public class CEventList implements CProcess
 	*	Standard constructor
 	*	Create an CEventList object
 	*/
-	public CEventList()
-	{
+	public CEventList() {
 		currentTime = 0;
 		stopFlag = false;
 		events = new ArrayList<>();
@@ -35,18 +33,15 @@ public class CEventList implements CProcess
 	*	@param type A type indicator of the event for objects that can process multiple types of events.
 	*	@param tme The time at which the event will be executed
 	*/
-	public void add(CProcess target, int type, double tme)
-	{
+	public void add(CProcess target, int type, double tme) {
 		boolean success=false;
 		// First create a new event using the parameters
-		CEvent evnt;
-                evnt = new CEvent(target,type,tme);
+		CEvent evnt = new CEvent(target,type,tme);
+
 		// Now it is examened where the event has to be inserted in the list
-		for(int i=0;i<events.size();i++)
-		{
+		for (int i = 0; i < events.size(); i++) {
 			// The events are sorted chronologically
-			if(events.get(i).getExecutionTime()>evnt.getExecutionTime())
-			{
+			if (events.get(i).getExecutionTime() > evnt.getExecutionTime()) {
 				// If an event is found in the list that has to be executed after the current event
 				success=true;
 				// Then the new event is inserted before that element
@@ -54,8 +49,7 @@ public class CEventList implements CProcess
 				break;
 			}
 		}
-		if(!success)
-		{
+		if(!success) {
 			// Else the new event is appended to the list
 			events.add(evnt);
 		}
@@ -65,13 +59,11 @@ public class CEventList implements CProcess
 	*	Method for starting the eventlist.
 	*	It will run until there are no longer events in the list
 	*/
-	public void start()
-	{
+	public void start() {
 		// stop criterion
-		while((events.size()>0)&&(!stopFlag))
-		{
+		while ((events.size()>0) && (!stopFlag)) {
 			// Make the similation time equal to the execution time of the first event in the list that has to be processed
-			currentTime=events.get(0).getExecutionTime();
+			currentTime = events.get(0).getExecutionTime();
 			// Let the element be processed
 			events.get(0).execute();
 			// Remove the event from the list
@@ -84,14 +76,12 @@ public class CEventList implements CProcess
 	*	It will run until there are no longer events in the list or that a maximum time has elapsed
 	*	@param mx De maximum time of the simulation
 	*/
-	public void start(double mx)
-	{
+	public void start(double mx) {
 		add(this,-1,mx);
 		// stop criterion
-		while((events.size()>0)&&(!stopFlag))
-		{
+		while ((events.size()>0) && (!stopFlag)) {
 			// Make the similation time equal to the execution time of the first event in the list that has to be processed
-			currentTime=events.get(0).getExecutionTime();
+			currentTime = events.get(0).getExecutionTime();
 			// Let the element be processed
 			events.get(0).execute();
 			// Remove the event from the list
@@ -99,8 +89,7 @@ public class CEventList implements CProcess
 		}
 	}
 
-	public void stop()
-	{
+	public void stop() {
 		stopFlag = true;
 	}
 
@@ -110,8 +99,7 @@ public class CEventList implements CProcess
 	*	This method makes it possible to read the time.
 	*	@return The current time in the simulation
 	*/
-	public double getTime()
-	{
+	public double getTime() {
 		return currentTime;
 	}
 	
@@ -121,8 +109,7 @@ public class CEventList implements CProcess
 	*	@param tme	The current time
 	*/
         @Override
-	public void execute(int type, double tme)
-	{
+	public void execute(int type, double tme) {
 		if(type==-1)
 			stop();
 	}

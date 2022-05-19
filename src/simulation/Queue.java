@@ -7,8 +7,7 @@ import java.util.ArrayList;
  *	@author Joel Karel
  *	@version %I%, %G%
  */
-public class Queue implements ProductAcceptor
-{
+public class Queue implements ProductAcceptor {
 	/** List in which the products are kept */
 	private ArrayList<Product> row;
 	/** Requests from machine that will be handling the products */
@@ -20,10 +19,9 @@ public class Queue implements ProductAcceptor
 	*	Initializes the queue and introduces a dummy machine
 	*	the machine has to be specified later
 	*/
-	public Queue(String queue_type)
-	{
+	public Queue(String queue_type) {
 		type = queue_type;
-		if (queue_type=="open"){
+		if (queue_type.equals("open")) {
 			working = true;
 		} else {
 			working = false;
@@ -36,27 +34,22 @@ public class Queue implements ProductAcceptor
 	*	Asks a queue to give a product to a machine
 	*	True is returned if a product could be delivered; false if the request is queued
 	*/
-	public boolean askProduct(Machine machine)
-	{
+	public boolean askProduct(Machine machine) {
 		// This is only possible with a non-empty queue
-		if(row.size()>0)
-		{
+		if (row.size() > 0) {
 			// If the machine accepts the product
-			if(machine.giveProduct(row.get(0)))
-			{
-				row.remove(0);// Remove it from the queue
-				if (row.size()==0 && type == "switching"){
+			if (machine.giveProduct(row.get(0))) {
+				// Remove it from the queue
+				row.remove(0);
+				if (row.size()==0 && type.equals("switching")) {
 					working = false;
 				}
 				return true;
-			}
-			else
+			} else {
 				return false; // Machine rejected; don't queue request
-		}
-		else
-		{
+			}
+		} else {
 			requests.add(machine);
-
 			return false; // queue request
 		}
 	}
@@ -65,21 +58,18 @@ public class Queue implements ProductAcceptor
 	*	Offer a product to the queue
 	*	It is investigated whether a machine wants the product, otherwise it is stored
 	*/
-	public boolean giveProduct(Product p)
-	{
+	public boolean giveProduct(Product p) {
 		// Check if the machine accepts it
-		if(requests.size()<1)
+		if (requests.size() < 1) {
 			row.add(p); // Otherwise store it
-		else
-		{
+		} else {
 			boolean delivered = false;
-			while(!delivered & (requests.size()>0))
-			{
-				delivered=requests.get(0).giveProduct(p);
+			while (!delivered & (requests.size() > 0)) {
+				delivered = requests.get(0).giveProduct(p);
 				// remove the request regardless of whether or not the product has been accepted
 				requests.remove(0);
 			}
-			if(!delivered)
+			if (!delivered)
 				row.add(p); // Otherwise store it
 		}
 		return true;
