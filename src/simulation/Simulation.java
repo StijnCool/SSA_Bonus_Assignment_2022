@@ -8,10 +8,7 @@ package simulation;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class Simulation {
 
@@ -85,13 +82,14 @@ public class Simulation {
         - Minimum service time = 1 sec
          */
 
+        double max_time = 60;
         boolean writeToFiles = true;
         for(int i = 1; i<=10; i++) {
-            run_simulation(i, writeToFiles);
+            run_simulation(i, max_time, writeToFiles);
         }
     }
 
-    private static void run_simulation(int iteration, boolean writeToFiles) {
+    private static void run_simulation(int iteration, double max_time, boolean writeToFiles) {
         System.out.println("-----------------------\n##### ITERATION " + iteration + " #####\n-----------------------");
 
     	// Create an eventlist
@@ -120,7 +118,7 @@ public class Simulation {
         Machine machineCash5 = new Machine(queueCash5,si,l,"Machine Cash 5", 2.6,1.1, "single");
         Machine machineService = new Machine(serviceDeskQueues,si,l,"Machine Service", new double[]{4.1, 2.6},new double[]{1.1, 1.1}, "both");
         // start the eventlist
-        l.start(10);
+        l.start(max_time);
 
         // Write to a file
         if (writeToFiles) {
@@ -148,6 +146,14 @@ public class Simulation {
         print("serviceTimeServiceList: " + serviceTimeServiceList.size());
         System.out.println("\n");
         //print_matrix(queueMatrix);
+
+        arrivalTimeNormalList = new ArrayList<>();
+        arrivalTimeServiceList = new ArrayList<>();
+        delayNormalList = new ArrayList<>();
+        delayServiceList = new ArrayList<>();
+        serviceTimeNormalList = new ArrayList<>();
+        serviceTimeServiceList = new ArrayList<>();
+        queueMatrix = new ArrayList<>();
     }
 
     /**
