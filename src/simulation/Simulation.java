@@ -119,9 +119,14 @@ public class Simulation {
         // start the eventlist
         l.start(10);
 
-        // Write arrival times to a file
+        // Write to a file
         write_to_file(arrivalTimeNormalList,"arrivalTimeNormalList"+iteration);
         write_to_file(arrivalTimeServiceList, "arrivalTimeServiceList"+iteration);
+        write_to_file(delayNormalList,"delayNormalList"+iteration);
+        write_to_file(delayServiceList,"delayServiceList"+iteration);
+        write_to_file(serviceTimeNormalList,"serviceTimeNormalList"+iteration);
+        write_to_file(serviceTimeServiceList,"serviceTimeServiceList"+iteration);
+        write_to_file(queueMatrix,"queueMatrix"+iteration);
 
         System.out.println();
         // Prints for testing purposes
@@ -138,7 +143,7 @@ public class Simulation {
         print("serviceTimeServiceList: " + serviceTimeServiceList.size());
         System.out.println();
         //print_matrix(queueMatrix);
-        write_to_file(queueMatrix,"queueMatrix"+iteration);
+
     }
 
     /**
