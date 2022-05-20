@@ -85,23 +85,24 @@ public class Simulation {
         double max_time = 120;
         for(int i = 1; i<=10; i++) {
             generator = new Random(i^i);
-            run_simulation(i,max_time);
+            run_simulation(i, max_time, writeToFiles);
             print(i);
         }
     }
 
-    private static void run_simulation(int iteration, double max_time){
+    private static void run_simulation(int iteration, double max_time, boolean writeToFiles) {
+        System.out.println("-----------------------\n##### ITERATION " + iteration + " #####\n-----------------------");
 
-        // Create an eventlist
-        CEventList l = new CEventList();
-        // The queues for the machines
-        Queue queueService = new Queue("open");
-        Queue queueCashService = new Queue("open");
-        Queue queueCash1 = new Queue("open");
-        Queue queueCash2 = new Queue("open");
-        Queue queueCash3 = new Queue("switching");
-        Queue queueCash4 = new Queue("switching");
-        Queue queueCash5 = new Queue("switching");
+    	// Create an eventlist
+	    CEventList l = new CEventList();
+	    // The queues for the machines
+        Queue queueCash1 = new Queue("open",1);
+        Queue queueCash2 = new Queue("open",2);
+        Queue queueCash3 = new Queue("switching",3);
+        Queue queueCash4 = new Queue("switching",4);
+        Queue queueCash5 = new Queue("switching",5);
+        Queue queueCashService = new Queue("open",6);
+        Queue queueService = new Queue("open",7);
         // List of queues for the sources
         ArrayList<Queue> cashQueues = new ArrayList<>(Arrays.asList(queueCash1, queueCash2, queueCash3, queueCash4, queueCash5, queueCashService, queueService));
         ArrayList<Queue> serviceDeskQueues = new ArrayList<>(Arrays.asList(queueService, queueCashService));
@@ -121,13 +122,15 @@ public class Simulation {
         l.start(max_time);
 
         // Write to a file
-        write_to_file(arrivalTimeNormalList,"arrivalTimeNormalList"+iteration);
-        write_to_file(arrivalTimeServiceList, "arrivalTimeServiceList"+iteration);
-        write_to_file(delayNormalList,"delayNormalList"+iteration);
-        write_to_file(delayServiceList,"delayServiceList"+iteration);
-        write_to_file(serviceTimeNormalList,"serviceTimeNormalList"+iteration);
-        write_to_file(serviceTimeServiceList,"serviceTimeServiceList"+iteration);
-        write_to_file(queueMatrix,"queueMatrix"+iteration);
+        if (writeToFiles) {
+            write_to_file(arrivalTimeNormalList, "arrivalTimeNormalList" + iteration);
+            write_to_file(arrivalTimeServiceList, "arrivalTimeServiceList" + iteration);
+            write_to_file(delayNormalList, "delayNormalList" + iteration);
+            write_to_file(delayServiceList, "delayServiceList" + iteration);
+            write_to_file(serviceTimeNormalList, "serviceTimeNormalList" + iteration);
+            write_to_file(serviceTimeServiceList, "serviceTimeServiceList" + iteration);
+            write_to_file(queueMatrix, "queueMatrix" + iteration);
+        }
 
         System.out.println();
         // Prints for testing purposes
@@ -142,7 +145,7 @@ public class Simulation {
         print("serviceTimeNormalList: " + serviceTimeNormalList.size());
         //print(serviceTimeServiceList);
         print("serviceTimeServiceList: " + serviceTimeServiceList.size());
-        System.out.println();
+        System.out.println("\n");
         //print_matrix(queueMatrix);
 
         arrivalTimeNormalList = new ArrayList<>();
@@ -152,7 +155,6 @@ public class Simulation {
         serviceTimeNormalList = new ArrayList<>();
         serviceTimeServiceList = new ArrayList<>();
         queueMatrix = new ArrayList<>();
-
     }
 
     /**

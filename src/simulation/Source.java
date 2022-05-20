@@ -1,7 +1,6 @@
 package simulation;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  *	A source of products
@@ -106,45 +105,25 @@ public class Source implements CProcess {
 		p.stamp(tme,"Creation", this.name);
 		p.setSourceType(this.name);
 
-		System.out.println("Source ---> " + ((name.equals("Source Service")) ? "Service Desk Customer Created" : "Regular Customer Created"));
-//		System.out.println(p.getSourceType());
+		System.out.println("Source ---> " + (name.equals("Source Service") ? "Service Desk" : "Regular" + " Customer Created"));
 
 		// Determine which queue the customer will join
 		int queue_num = choose_queue(this.queues);
 
-		System.out.println("Source ---> Send customer to queue " + (p.getSourceType().equals("Source Service") ? "Service" : (queue_num+1)));
+		System.out.println("Source ---> Send " + (name.equals("Source Service") ? "Service Desk" : "Regular") + " Customer to queue " + (p.getSourceType().equals("Source Service") ? "Service" : (queue_num+1)));
 
 		// give arrived product to queue
 		this.queues.get(queue_num).giveProduct(p);
 
-		//TODO remove print statements
-		// these are just for testing purposes to see how long every queue is
-		if (queues.size() == 7) {
-			System.out.println("Arrival at queue " + (queue_num+1) + " was at time = " + tme);
-
-			for (int i = 0; i < queues.size()-1; i++) {
-				if (i==5) {
-					int row_size = queues.get(i).getSize()+queues.get(i+1).getSize();
-					System.out.print("Q6+S: " + row_size + "\n\n");
-				} else {
-					System.out.print("Q" + (i+1) + ": " + queues.get(i).getSize() + " ");
-				}
-			}
-		} else {
-			System.out.println("Arrival at queue " + 6 + "+S was at time = " + tme);
-			int row_size = queues.get(0).getSize() + queues.get(1).getSize();
-			System.out.println("Q6+S: " + row_size + "\n");
-		}
-
-
-		// Record times of arrivals and the queue-lengths at time = tme
-		this.recordQueueArrivals(tme);
-		// Record just the arrival times
+		// Record the arrival times
 		if (this.name.equals("Source Regular")) {
 			Simulation.arrivalTimeNormalList.add(tme);
 		} else {
 			Simulation.arrivalTimeServiceList.add(tme);
 		}
+
+		// This method is just for testing purposes to see how long every queue is
+//		this.printQueueLengths(tme, queue_num);
 
 
 		// Generate duration
@@ -211,27 +190,22 @@ public class Source implements CProcess {
 		return res;
 	}
 
-	// Method to record the arrival times
-	private void recordQueueArrivals(double tme) {
-		List<Double> l = new ArrayList<Double>();
-		if (queues.size() > 2) {
-			l.add(tme);
-			for (int i = 0; i < queues.size(); i++) {
-				l.add((double) queues.get(i).getSize());
+	private void printQueueLengths(double tme, int queue_num) {
+		if (queues.size() == 7) {
+			System.out.println("Arrival at queue " + (queue_num+1) + " was at time = " + tme);
+
+			for (int i = 0; i < queues.size()-1; i++) {
+				if (i==5) {
+					int row_size = queues.get(i).getSize()+queues.get(i+1).getSize();
+					System.out.print("Q6+S: " + row_size + "\n\n");
+				} else {
+					System.out.print("Q" + (i+1) + ": " + queues.get(i).getSize() + " ");
+				}
 			}
-			l.add(1.0);
 		} else {
-			List<Double> prev = new ArrayList<>(List.copyOf(Simulation.queueMatrix.get(Simulation.queueMatrix.size() - 1)));
-
-			int length = prev.size();
-			prev.set(0, tme);
-			prev.set(length-3, (double) queues.get(1).getSize());
-			prev.set(length-2, (double) queues.get(0).getSize());
-			prev.set(length-1, 1.0);
-
-			l.addAll(prev);
+			System.out.println("Arrival at queue " + 6 + "+S was at time = " + tme);
+			int row_size = queues.get(0).getSize() + queues.get(1).getSize();
+			System.out.println("Q6+S: " + row_size + "\n");
 		}
-		Simulation.queueMatrix.add(l);
-		System.out.println("Source ---> Recorded arrival time including queue-lengths: " + l + "\n");
 	}
 }

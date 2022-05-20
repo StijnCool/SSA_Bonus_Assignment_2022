@@ -134,7 +134,7 @@ public class Machine implements CProcess,ProductAcceptor {
 	*/
 	public void execute(int type, double tme) {
 		// show arrival
-		System.out.println("Product finished at " + this.name + " at time = " + tme);
+		System.out.println("Machine ---> Product finished at " + this.name + " at time = " + tme);
 
 		// Remove product from system
 		product.stamp(tme,"Production complete",name);
@@ -155,7 +155,6 @@ public class Machine implements CProcess,ProductAcceptor {
 		if (isRegularCustomer()) {
 			Simulation.serviceTimeNormalList.add(serviceTime);
 		} else {
-			System.out.println();
 			Simulation.serviceTimeServiceList.add(serviceTime);
 		}
 
@@ -189,21 +188,20 @@ public class Machine implements CProcess,ProductAcceptor {
 			product = p;
 			// mark starting time
 			product.stamp(eventlist.getTime(),"Production started",name);
-			System.out.println("Machine ---> Production of " + ((p.getSourceType().equals("Source Service")) ? "Service Desk Customer" : "Regular Customer") + " started at " + name);
+
+			System.out.println("Machine ---> Production of " + ((p.getSourceType().equals("Source Service")) ? "Service Desk Customer" : "Regular Customer") + " started at " + name + " at time = " + eventlist.getTime());
 
 			if (this.type.equals("both")) {
 				if (isRegularCustomer()) {
-					this.queue = this.queue_service.get(1);
-					this.mean = this.mean_2[1];
-					this.STD = this.STD_2[1];
+					queue = queue_service.get(1);
+					mean = mean_2[1];
+					STD = STD_2[1];
 				} else {
-					this.queue = this.queue_service.get(0);
-					this.mean = this.mean_2[0];
-					this.STD = this.STD_2[0];
+					queue = queue_service.get(0);
+					mean = mean_2[0];
+					STD = STD_2[0];
 				}
 			}
-
-			//TODO implement recordQueueLeaving() method???
 
 			// start production
 			startProduction();
@@ -217,10 +215,6 @@ public class Machine implements CProcess,ProductAcceptor {
 
 	private boolean isRegularCustomer() {
 		return this.product.getSourceType().equals("Source Regular");
-	}
-
-	private void recordQueueLeaving() {
-		//TODO implement?
 	}
 
 	/**
