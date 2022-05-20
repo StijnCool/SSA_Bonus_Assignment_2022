@@ -8,10 +8,7 @@ package simulation;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class Simulation {
 
@@ -143,6 +140,14 @@ public class Simulation {
         print("serviceTimeServiceList: " + serviceTimeServiceList.size());
         System.out.println();
         //print_matrix(queueMatrix);
+
+        arrivalTimeNormalList = new ArrayList<>();
+        arrivalTimeServiceList = new ArrayList<>();
+        delayNormalList = new ArrayList<>();
+        delayServiceList = new ArrayList<>();
+        serviceTimeNormalList = new ArrayList<>();
+        serviceTimeServiceList = new ArrayList<>();
+        queueMatrix = new ArrayList<>();
 
     }
 
