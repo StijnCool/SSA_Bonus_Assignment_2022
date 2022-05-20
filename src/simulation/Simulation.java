@@ -53,7 +53,7 @@ public class Simulation {
 
     */
     public static List<List<Double>> queueMatrix = new ArrayList<>();
-    private final static Random generator = new Random(314159);
+    private static Random generator = new Random(314159);
 	
 
     /**
@@ -82,9 +82,11 @@ public class Simulation {
         - Minimum service time = 1 sec
          */
 
-        double max_time = 60;
+        double max_time = 120;
         for(int i = 1; i<=10; i++) {
+            generator = new Random(i^i);
             run_simulation(i,max_time);
+            print(i);
         }
     }
 
