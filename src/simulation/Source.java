@@ -140,7 +140,11 @@ public class Source implements CProcess {
 		// Record times of arrivals and the queue-lengths at time = tme
 		this.recordQueueArrivals(tme);
 		// Record just the arrival times
-		Simulation.arrivalTimeList.add(tme);
+		if (this.name.equals("Source Regular")) {
+			Simulation.arrivalTimeNormalList.add(tme);
+		} else {
+			Simulation.arrivalTimeServiceList.add(tme);
+		}
 
 
 		// Generate duration

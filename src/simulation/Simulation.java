@@ -24,7 +24,9 @@ public class Simulation {
 
     public static List<Double> delayNormalList = new ArrayList<>();
     public static List<Double> delayServiceList = new ArrayList<>();
-    public static List<Double> arrivalTimeList = new ArrayList<>();
+    public static List<Double> arrivalTimeNormalList = new ArrayList<>();
+
+    public static List<Double> arrivalTimeServiceList = new ArrayList<>();
     public static List<Double> serviceTimeNormalList = new ArrayList<>();
     public static List<Double> serviceTimeServiceList = new ArrayList<>();
 
@@ -87,7 +89,7 @@ public class Simulation {
 
     	// Create an eventlist
 	    CEventList l = new CEventList();
-	    // A queue for the machine
+	    // The queues for the machines
 	    Queue queueService = new Queue("open");
         Queue queueCashService = new Queue("open");
         Queue queueCash1 = new Queue("open");
@@ -95,7 +97,7 @@ public class Simulation {
         Queue queueCash3 = new Queue("switching");
         Queue queueCash4 = new Queue("switching");
         Queue queueCash5 = new Queue("switching");
-
+        // List of queues for the sources
         ArrayList<Queue> cashQueues = new ArrayList<>(Arrays.asList(queueCash1, queueCash2, queueCash3, queueCash4, queueCash5, queueCashService, queueService));
         ArrayList<Queue> serviceDeskQueues = new ArrayList<>(Arrays.asList(queueService, queueCashService));
 	    // A source
@@ -103,10 +105,7 @@ public class Simulation {
         Source sourceService = new Source(serviceDeskQueues,l,"Source Service",0.2);
 	    // A sink
 	    Sink si = new Sink("Sink 1");
-	    // A machine
-
-
-        // TODO Make it possible that two queues join in one machine with priority to one queue (multiple constructors with type variable?)
+	    // The machines
 	    Machine machineCash1 = new Machine(queueCash1,si,l,"Machine Cash 1", 2.6,1.1, "single");
         Machine machineCash2 = new Machine(queueCash2,si,l,"Machine Cash 2", 2.6,1.1, "single");
         Machine machineCash3 = new Machine(queueCash3,si,l,"Machine Cash 3", 2.6,1.1, "single");
@@ -116,11 +115,15 @@ public class Simulation {
 	    // start the eventlist
 	    l.start(100);
 
+        // Write arrival times to a file
+        write_to_file(arrivalTimeNormalList,"arrivalTimeNormalList");
+        write_to_file(arrivalTimeServiceList, "arrivalTimeServiceList");
 
-        //print(arrivalTimeList);
-        write_to_file(arrivalTimeList,"arrivalTimeList");
-        print("arrivalTimeList: " + arrivalTimeList.size());
-        //print(delayNormalList);
+        // Prints for testing purposes
+        print("arrivalTimeNormalList: " + arrivalTimeNormalList.size());
+        //print(arrivalTimeNormalList);
+        print("arrivalTimeServiceList: " + arrivalTimeServiceList.size());
+        //print(arrivalTimeServiceList);
         print("delayNormalList: " + delayNormalList.size());
         //print(delayServiceList);
         print("delayServiceList: " + delayServiceList.size());
