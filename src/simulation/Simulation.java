@@ -189,15 +189,15 @@ public class Simulation {
             String s = "";
 
             if(L.get(0) instanceof List){ // L is a matrix
-                s += "[";
+                s += filename+" = [";
                 for(Object l : L){
                     l = (List) l;
                     String ls = l.toString().replace("[","").replace("]","");
                     s += ls + ";";
                 }
-                s += "]";
+                s += "];";
             } else{ // L is a list
-                s = filename+" = "+L.toString();
+                s = filename+" = "+L.toString()+";";
             }
             myWriter.write(s);
             myWriter.close();
