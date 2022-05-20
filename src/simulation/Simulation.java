@@ -81,12 +81,14 @@ public class Simulation {
         - Standard deviation = 1.1 min = 66 s
         - Minimum service time = 1 sec
          */
+
+        double max_time = 60;
         for(int i = 1; i<=10; i++) {
-            run_simulation(i);
+            run_simulation(i,max_time);
         }
     }
 
-    private static void run_simulation(int iteration){
+    private static void run_simulation(int iteration, double max_time){
 
         // Create an eventlist
         CEventList l = new CEventList();
@@ -114,7 +116,7 @@ public class Simulation {
         Machine machineCash5 = new Machine(queueCash5,si,l,"Machine Cash 5", 2.6,1.1, "single");
         Machine machineService = new Machine(serviceDeskQueues,si,l,"Machine Service", new double[]{4.1, 2.6},new double[]{1.1, 1.1}, "both");
         // start the eventlist
-        l.start(10);
+        l.start(max_time);
 
         // Write to a file
         write_to_file(arrivalTimeNormalList,"arrivalTimeNormalList"+iteration);
