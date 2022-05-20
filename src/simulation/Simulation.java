@@ -84,8 +84,12 @@ public class Simulation {
         - Standard deviation = 1.1 min = 66 s
         - Minimum service time = 1 sec
          */
+        for(int i = 1; i<=10; i++) {
+            run_simulation(i);
+        }
+    }
 
-        double[] serviceTimes = {};
+    private static void run_simulation(int iteration){
 
     	// Create an eventlist
 	    CEventList l = new CEventList();
@@ -100,28 +104,31 @@ public class Simulation {
         // List of queues for the sources
         ArrayList<Queue> cashQueues = new ArrayList<>(Arrays.asList(queueCash1, queueCash2, queueCash3, queueCash4, queueCash5, queueCashService, queueService));
         ArrayList<Queue> serviceDeskQueues = new ArrayList<>(Arrays.asList(queueService, queueCashService));
-	    // A source
-	    Source sourceRegular = new Source(cashQueues, l, "Source Regular", 1);
+        // A source
+        Source sourceRegular = new Source(cashQueues, l, "Source Regular", 1);
         Source sourceService = new Source(serviceDeskQueues,l,"Source Service",0.2);
-	    // A sink
-	    Sink si = new Sink("Sink 1");
-	    // The machines
-	    Machine machineCash1 = new Machine(queueCash1,si,l,"Machine Cash 1", 2.6,1.1, "single");
+        // A sink
+        Sink si = new Sink("Sink 1");
+        // The machines
+        Machine machineCash1 = new Machine(queueCash1,si,l,"Machine Cash 1", 2.6,1.1, "single");
         Machine machineCash2 = new Machine(queueCash2,si,l,"Machine Cash 2", 2.6,1.1, "single");
         Machine machineCash3 = new Machine(queueCash3,si,l,"Machine Cash 3", 2.6,1.1, "single");
         Machine machineCash4 = new Machine(queueCash4,si,l,"Machine Cash 4", 2.6,1.1, "single");
         Machine machineCash5 = new Machine(queueCash5,si,l,"Machine Cash 5", 2.6,1.1, "single");
         Machine machineService = new Machine(serviceDeskQueues,si,l,"Machine Service", new double[]{4.1, 2.6},new double[]{1.1, 1.1}, "both");
-	    // start the eventlist
-	    l.start(10);
+        // start the eventlist
+        l.start(10);
 
-        // Write arrival times to a file
-        write_to_file(arrivalTimeNormalList,"arrivalTimeNormalList");
-        write_to_file(arrivalTimeServiceList, "arrivalTimeServiceList");
+        // Write to a file
+        write_to_file(arrivalTimeNormalList,"arrivalTimeNormalList"+iteration);
+        write_to_file(arrivalTimeServiceList, "arrivalTimeServiceList"+iteration);
+        write_to_file(delayNormalList,"delayNormalList"+iteration);
+        write_to_file(delayServiceList,"delayServiceList"+iteration);
+        write_to_file(serviceTimeNormalList,"serviceTimeNormalList"+iteration);
+        write_to_file(serviceTimeServiceList,"serviceTimeServiceList"+iteration);
+        write_to_file(queueMatrix,"queueMatrix"+iteration);
 
-        // Write times of customers arriving or leaving a queue including all queue-lengths to a file
-        write_to_file(queueMatrix,"queueMatrix");
-
+        System.out.println();
         // Prints for testing purposes
         print("arrivalTimeNormalList: " + arrivalTimeNormalList.size());
         //print(arrivalTimeNormalList);
@@ -136,6 +143,7 @@ public class Simulation {
         print("serviceTimeServiceList: " + serviceTimeServiceList.size());
         System.out.println();
         //print_matrix(queueMatrix);
+
     }
 
     /**
@@ -177,21 +185,20 @@ public class Simulation {
 
     public static void write_to_file(List L, String filename){
         try {
-            FileWriter myWriter = new FileWriter(filename+".txt");
+            FileWriter myWriter = new FileWriter("files/"+filename+".txt");
             String s = "";
 
             if(L.get(0) instanceof List){ // L is a matrix
-                s += "[";
+                s += filename+" = [";
                 for(Object l : L){
                     l = (List) l;
                     String ls = l.toString().replace("[","").replace("]","");
-                    s += ls + "; ";
+                    s += ls + ";";
                 }
-                s += "]";
+                s += "];";
             } else{ // L is a list
-                s = L.toString();
+                s = filename+" = "+L.toString()+";";
             }
-            print(s);
             myWriter.write(s);
             myWriter.close();
             System.out.println("Successfully wrote to the file.");
