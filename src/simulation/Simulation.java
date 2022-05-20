@@ -84,12 +84,15 @@ public class Simulation {
         - Standard deviation = 1.1 min = 66 s
         - Minimum service time = 1 sec
          */
+
+        boolean writeToFiles = true;
         for(int i = 1; i<=10; i++) {
-            run_simulation(i);
+            run_simulation(i, writeToFiles);
         }
     }
 
-    private static void run_simulation(int iteration){
+    private static void run_simulation(int iteration, boolean writeToFiles) {
+        System.out.println("-----------------------\n##### ITERATION " + iteration + " #####\n-----------------------");
 
     	// Create an eventlist
 	    CEventList l = new CEventList();
@@ -120,13 +123,15 @@ public class Simulation {
         l.start(10);
 
         // Write to a file
-        write_to_file(arrivalTimeNormalList,"arrivalTimeNormalList"+iteration);
-        write_to_file(arrivalTimeServiceList, "arrivalTimeServiceList"+iteration);
-        write_to_file(delayNormalList,"delayNormalList"+iteration);
-        write_to_file(delayServiceList,"delayServiceList"+iteration);
-        write_to_file(serviceTimeNormalList,"serviceTimeNormalList"+iteration);
-        write_to_file(serviceTimeServiceList,"serviceTimeServiceList"+iteration);
-        write_to_file(queueMatrix,"queueMatrix"+iteration);
+        if (writeToFiles) {
+            write_to_file(arrivalTimeNormalList, "arrivalTimeNormalList" + iteration);
+            write_to_file(arrivalTimeServiceList, "arrivalTimeServiceList" + iteration);
+            write_to_file(delayNormalList, "delayNormalList" + iteration);
+            write_to_file(delayServiceList, "delayServiceList" + iteration);
+            write_to_file(serviceTimeNormalList, "serviceTimeNormalList" + iteration);
+            write_to_file(serviceTimeServiceList, "serviceTimeServiceList" + iteration);
+            write_to_file(queueMatrix, "queueMatrix" + iteration);
+        }
 
         System.out.println();
         // Prints for testing purposes
@@ -141,9 +146,8 @@ public class Simulation {
         print("serviceTimeNormalList: " + serviceTimeNormalList.size());
         //print(serviceTimeServiceList);
         print("serviceTimeServiceList: " + serviceTimeServiceList.size());
-        System.out.println();
+        System.out.println("\n");
         //print_matrix(queueMatrix);
-
     }
 
     /**
