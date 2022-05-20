@@ -113,7 +113,7 @@ public class Simulation {
         Machine machineCash5 = new Machine(queueCash5,si,l,"Machine Cash 5", 2.6,1.1, "single");
         Machine machineService = new Machine(serviceDeskQueues,si,l,"Machine Service", new double[]{4.1, 2.6},new double[]{1.1, 1.1}, "both");
 	    // start the eventlist
-	    l.start(100);
+	    l.start(10);
 
         // Write arrival times to a file
         write_to_file(arrivalTimeNormalList,"arrivalTimeNormalList");
@@ -133,6 +133,7 @@ public class Simulation {
         print("serviceTimeServiceList: " + serviceTimeServiceList.size());
         System.out.println();
         //print_matrix(queueMatrix);
+        write_to_file(queueMatrix,"queueMatrix");
     }
 
     /**
@@ -178,7 +179,13 @@ public class Simulation {
             String s = "";
 
             if(L.get(0) instanceof List){ // L is a matrix
-
+                s += "[";
+                for(Object l : L){
+                    l = (List) l;
+                    String ls = l.toString().replace("[","").replace("]","");
+                    s += ls + ";";
+                }
+                s += "]";
             } else{ // L is a list
                 s = L.toString();
             }
