@@ -84,13 +84,17 @@ public class Simulation {
         - Standard deviation = 1.1 min = 66 s
         - Minimum service time = 1 sec
          */
+        for(int i = 1; i<=10; i++) {
+            run_simulation(i);
+        }
+    }
 
-        double[] serviceTimes = {};
+    private static void run_simulation(int iteration){
 
-    	// Create an eventlist
-	    CEventList l = new CEventList();
-	    // The queues for the machines
-	    Queue queueService = new Queue("open");
+        // Create an eventlist
+        CEventList l = new CEventList();
+        // The queues for the machines
+        Queue queueService = new Queue("open");
         Queue queueCashService = new Queue("open");
         Queue queueCash1 = new Queue("open");
         Queue queueCash2 = new Queue("open");
@@ -100,25 +104,26 @@ public class Simulation {
         // List of queues for the sources
         ArrayList<Queue> cashQueues = new ArrayList<>(Arrays.asList(queueCash1, queueCash2, queueCash3, queueCash4, queueCash5, queueCashService, queueService));
         ArrayList<Queue> serviceDeskQueues = new ArrayList<>(Arrays.asList(queueService, queueCashService));
-	    // A source
-	    Source sourceRegular = new Source(cashQueues, l, "Source Regular", 1);
+        // A source
+        Source sourceRegular = new Source(cashQueues, l, "Source Regular", 1);
         Source sourceService = new Source(serviceDeskQueues,l,"Source Service",0.2);
-	    // A sink
-	    Sink si = new Sink("Sink 1");
-	    // The machines
-	    Machine machineCash1 = new Machine(queueCash1,si,l,"Machine Cash 1", 2.6,1.1, "single");
+        // A sink
+        Sink si = new Sink("Sink 1");
+        // The machines
+        Machine machineCash1 = new Machine(queueCash1,si,l,"Machine Cash 1", 2.6,1.1, "single");
         Machine machineCash2 = new Machine(queueCash2,si,l,"Machine Cash 2", 2.6,1.1, "single");
         Machine machineCash3 = new Machine(queueCash3,si,l,"Machine Cash 3", 2.6,1.1, "single");
         Machine machineCash4 = new Machine(queueCash4,si,l,"Machine Cash 4", 2.6,1.1, "single");
         Machine machineCash5 = new Machine(queueCash5,si,l,"Machine Cash 5", 2.6,1.1, "single");
         Machine machineService = new Machine(serviceDeskQueues,si,l,"Machine Service", new double[]{4.1, 2.6},new double[]{1.1, 1.1}, "both");
-	    // start the eventlist
-	    l.start(10);
+        // start the eventlist
+        l.start(10);
 
         // Write arrival times to a file
-        write_to_file(arrivalTimeNormalList,"arrivalTimeNormalList");
-        write_to_file(arrivalTimeServiceList, "arrivalTimeServiceList");
+        write_to_file(arrivalTimeNormalList,"arrivalTimeNormalList"+iteration);
+        write_to_file(arrivalTimeServiceList, "arrivalTimeServiceList"+iteration);
 
+        System.out.println();
         // Prints for testing purposes
         print("arrivalTimeNormalList: " + arrivalTimeNormalList.size());
         //print(arrivalTimeNormalList);
@@ -133,7 +138,7 @@ public class Simulation {
         print("serviceTimeServiceList: " + serviceTimeServiceList.size());
         System.out.println();
         //print_matrix(queueMatrix);
-        write_to_file(queueMatrix,"queueMatrix");
+        write_to_file(queueMatrix,"queueMatrix"+iteration);
     }
 
     /**
@@ -175,7 +180,7 @@ public class Simulation {
 
     public static void write_to_file(List L, String filename){
         try {
-            FileWriter myWriter = new FileWriter(filename+".txt");
+            FileWriter myWriter = new FileWriter("files/"+filename+".txt");
             String s = "";
 
             if(L.get(0) instanceof List){ // L is a matrix
@@ -187,9 +192,8 @@ public class Simulation {
                 }
                 s += "]";
             } else{ // L is a list
-                s = L.toString();
+                s = filename+" = "+L.toString();
             }
-            print(s);
             myWriter.write(s);
             myWriter.close();
             System.out.println("Successfully wrote to the file.");
