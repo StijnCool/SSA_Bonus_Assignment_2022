@@ -6,6 +6,8 @@
 
 package simulation;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -115,18 +117,19 @@ public class Simulation {
 	    l.start(100);
 
 
-        print(arrivalTimeList);
+        //print(arrivalTimeList);
+        write_to_file(arrivalTimeList,"arrivalTimeList");
         print("arrivalTimeList: " + arrivalTimeList.size());
-        print(delayNormalList);
+        //print(delayNormalList);
         print("delayNormalList: " + delayNormalList.size());
-        print(delayServiceList);
+        //print(delayServiceList);
         print("delayServiceList: " + delayServiceList.size());
-        print(serviceTimeNormalList);
+        //print(serviceTimeNormalList);
         print("serviceTimeNormalList: " + serviceTimeNormalList.size());
-        print(serviceTimeServiceList);
+        //print(serviceTimeServiceList);
         print("serviceTimeServiceList: " + serviceTimeServiceList.size());
         System.out.println();
-        print_matrix(queueMatrix);
+        //print_matrix(queueMatrix);
     }
 
     /**
@@ -163,6 +166,26 @@ public class Simulation {
     public static void print_matrix(List<List<Double>> M) {
         for (List<Double> l : M) {
             print(l);
+        }
+    }
+
+    public static void write_to_file(List L, String filename){
+        try {
+            FileWriter myWriter = new FileWriter(filename+".txt");
+            String s = "";
+
+            if(L.get(0) instanceof List){ // L is a matrix
+
+            } else{ // L is a list
+                s = L.toString();
+            }
+            print(s);
+            myWriter.write(s);
+            myWriter.close();
+            System.out.println("Successfully wrote to the file.");
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
         }
     }
     
