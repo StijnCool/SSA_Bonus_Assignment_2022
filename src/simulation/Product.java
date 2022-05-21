@@ -11,23 +11,29 @@ class Product {
 	private ArrayList<Double> times;
 	private ArrayList<String> events;
 	private ArrayList<String> stations;
+	/** Source name from which product was produced */
 	private String source = "";
 	
 	/** 
-	*	Constructor for the product
-	*	Mark the time at which it is created
-	*/
+	 *	Constructor for the product
+	 *	Mark the time at which it is created
+	 */
 	public Product() {
-		times = new ArrayList<>();
-		events = new ArrayList<>();
-		stations = new ArrayList<>();
+		this.times = new ArrayList<>();
+		this.events = new ArrayList<>();
+		this.stations = new ArrayList<>();
 	}
-	
-	
+
+	/**
+	 * Method to add stamps of certain events, i.e., creation, starting production and finishing production
+	 * @param time Time of the event
+	 * @param event Name of the event
+	 * @param station Where the product was at
+	 */
 	public void stamp(double time,String event,String station) {
-		times.add(time);
-		events.add(event);
-		stations.add(station);
+		this.times.add(time);
+		this.events.add(event);
+		this.stations.add(station);
 	}
 
 	public void setSourceType(String source) {
@@ -48,26 +54,5 @@ class Product {
 
 	public ArrayList<String> getStations() {
 		return stations;
-	}
-	
-	public double[] getTimesAsArray() {
-		times.trimToSize();
-		double[] tmp = new double[times.size()];
-		for (int i = 0; i < times.size(); i++) {
-			tmp[i] = times.get(i);
-		}
-		return tmp;
-	}
-
-	public String[] getEventsAsArray() {
-		String[] tmp = new String[events.size()];
-		tmp = events.toArray(tmp);
-		return tmp;
-	}
-
-	public String[] getStationsAsArray() {
-		String[] tmp = new String[stations.size()];
-		tmp = stations.toArray(tmp);
-		return tmp;
 	}
 }

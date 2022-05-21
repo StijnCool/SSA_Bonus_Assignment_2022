@@ -20,18 +20,24 @@ public class Sink implements ProductAcceptor {
 	private String name;
 	
 	/**
-	*	Constructor, creates objects
-	*/
+	 * Constructor, creates objects
+	 * @param n Name of sink
+	 */
 	public Sink(String n) {
-		name = n;
-		products = new ArrayList<>();
-		numbers = new ArrayList<>();
-		times = new ArrayList<>();
-		events = new ArrayList<>();
-		stations = new ArrayList<>();
-		number = 0;
+		this.name = n;
+		this.products = new ArrayList<>();
+		this.numbers = new ArrayList<>();
+		this.times = new ArrayList<>();
+		this.events = new ArrayList<>();
+		this.stations = new ArrayList<>();
+		this.number = 0;
 	}
-	
+
+	/**
+	 * Method to give product to sink
+	 * @param p	The product that is accepted
+	 * @return true, since product is always accepted
+	 */
 	@Override
 	public boolean giveProduct(Product p) {
 		number++;
@@ -47,35 +53,5 @@ public class Sink implements ProductAcceptor {
 			stations.add(s.get(i));
 		}
 		return true;
-	}
-	
-	public int[] getNumbers() {
-		numbers.trimToSize();
-		int[] tmp = new int[numbers.size()];
-		for (int i = 0; i < numbers.size(); i++) {
-			tmp[i] = numbers.get(i);
-		}
-		return tmp;
-	}
-
-	public double[] getTimes() {
-		times.trimToSize();
-		double[] tmp = new double[times.size()];
-		for (int i = 0; i < times.size(); i++) {
-			tmp[i] = times.get(i);
-		}
-		return tmp;
-	}
-
-	public String[] getEvents() {
-		String[] tmp = new String[events.size()];
-		tmp = events.toArray(tmp);
-		return tmp;
-	}
-
-	public String[] getStations() {
-		String[] tmp = new String[stations.size()];
-		tmp = stations.toArray(tmp);
-		return tmp;
 	}
 }

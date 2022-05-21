@@ -15,29 +15,29 @@ public class CEvent {
 	private double executionTime;
 
 	/**
-	*	Constructor for objects
-	*	@param dl	The object that will process the event
-	*	@param tp	The type of the event
-	*	@param tme	The time on which the event will be executed
-	*/
+	 * Constructor for objects
+	 * @param dl The object that will process the event
+	 * @param tp The type of the event
+	 * @param tme The time on which the event will be executed
+	 */
 	public CEvent(CProcess dl,int tp, double tme) {
-		target=dl;
-		type=tp;
-		executionTime=tme;
+		this.target = dl;
+		this.type = tp;
+		this.executionTime = tme;
 	}
 	
 	/**
-	*	Method to signal the target to execute an event
-	*/
+	 * Method to signal the target to execute an event
+	 */
 	public void execute() {
-		target.execute(type,executionTime);
+		this.target.execute(type,executionTime);
 	}
-	
+
 	/**
-	*	Method to ask the event at which time it will be executed
-	*	@return	The time at which the event will be executed
-	*/
+	 * Method to ask the event at which time it will be executed
+	 * @return The time at which the event will be executed
+	 */
 	public double getExecutionTime() {
-		return executionTime;
+		return this.executionTime;
 	}
 }

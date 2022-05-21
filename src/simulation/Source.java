@@ -25,94 +25,80 @@ public class Source implements CProcess {
 	private double arrivalRate;
 
 	/**
-	 *	Constructor, creates objects
-	 *        Interarrival times are exponentially distributed with mean 33
-	 *	@param q	The receiver of the products
-	 *	@param l	The eventlist that is requested to construct events
-	 *	@param n	Name of object
+	 * Constructor, creates objects
+	 *		Interarrival times are exponentially distributed with mean 33
+	 * @param q The receiver of the products
+	 * @param l The eventlist that is requested to construct events
+	 * @param n Name of object
 	 */
 	public Source(ArrayList<Queue> q, CEventList l, String n, double _arrivalRate) {
-		list = l;
-		queues = q;
-		name = n;
-		arrivalRate = _arrivalRate;
+		this.list = l;
+		this.queues = q;
+		this.name = n;
+		this.arrivalRate = _arrivalRate;
 		// put first event in list for initialization
 		double firstIAT = Simulation.generate_interarrival_time(arrivalRate);
-		list.add(this,0,firstIAT); //target,type,time
-		interarrivalTimes = new double[]{firstIAT};
+		this.list.add(this,0,firstIAT); //target,type,time
+		this.interarrivalTimes = new double[]{firstIAT};
 	}
 
 	/**
-	*	Constructor, creates objects
-	*        Interarrival times are exponentially distributed with mean 33
-	*	@param q	The receiver of the products
-	*	@param l	The eventlist that is requested to construct events
-	*	@param n	Name of object
-	*/
-	public Source(ArrayList<Queue> q,CEventList l,String n) {
-		list = l;
-		queues = q;
-		name = n;
-		meanArrTime=33;
-		// put first event in list for initialization
-		list.add(this,0,drawRandomExponential(meanArrTime)); //target,type,time
-	}
-
-	/**
-	*	Constructor, creates objects
-	*        Interarrival times are exponentially distributed with specified mean
-	*	@param q	The receiver of the products
-	*	@param l	The eventlist that is requested to construct events
-	*	@param n	Name of object
-	*	@param m	Mean arrival time
-	*/
-
-	/**
-	public Source(ProductAcceptor q,CEventList l,String n,double m)
-	{
-		list = l;
-		queue = q;
-		name = n;
-		meanArrTime=m;
-		// put first event in list for initialization
-		list.add(this,0,drawRandomExponential(meanArrTime)); //target,type,time
-	}
+	 * Constructor, creates objects
+	 *		Interarrival times are exponentially distributed with mean 33
+	 * @param q The receiver of the products
+	 * @param l The eventlist that is requested to construct events
+	 * @param n Name of object
 	 */
+	public Source(ArrayList<Queue> q,CEventList l,String n) {
+		this.list = l;
+		this.queues = q;
+		this.name = n;
+		this.meanArrTime=33;
+		// put first event in list for initialization
+		this.list.add(this,0,drawRandomExponential(meanArrTime)); //target,type,time
+	}
 
 	/**
-	*	Constructor, creates objects
-	*        Interarrival times are prespecified
-	*	@param q	The receiver of the products
-	*	@param l	The eventlist that is requested to construct events
-	*	@param n	Name of object
-	*	@param ia	interarrival times
-	*/
+	 * Constructor, creates objects
+	 *		Interarrival times are prespecified
+	 * @param q The receiver of the products
+	 * @param l The eventlist that is requested to construct events
+	 * @param n Name of object
+	 * @param ia Interarrival times
+	 */
 	public Source(ArrayList<Queue> q,CEventList l,String n,double[] ia) {
-		list = l;
-		queues = q;
-		name = n;
-		meanArrTime=-1;
-		interarrivalTimes=ia;
-		interArrCnt=0;
+		this.list = l;
+		this.queues = q;
+		this.name = n;
+		this.meanArrTime = -1;
+		this.interarrivalTimes = ia;
+		this.interArrCnt = 0;
 		// put first event in list for initialization
-		list.add(this,0,interarrivalTimes[0]); //target,type,time
+		this.list.add(this,0,interarrivalTimes[0]); //target,type,time
 	}
-	
+
+	/**
+	 * Method to generate a new customer and sent this one to one of the open queues
+	 * @param type The type of the event that has to be executed
+	 * @param tme The current time
+	 */
 	@Override
 	public void execute(int type, double tme) {
-		// show arrival
+		// Show arrival
 		Product p = new Product();
 		p.stamp(tme,"Creation", this.name);
 		p.setSourceType(this.name);
 
+		// Print what type of customer has been created
 		System.out.println("Source ---> " + (name.equals("Source Service") ? "Service Desk" : "Regular" + " Customer Created"));
 
 		// Determine which queue the customer will join
 		int queue_num = choose_queue(this.queues);
 
+		// Print to which queue the customer is sent
 		System.out.println("Source ---> Send " + (name.equals("Source Service") ? "Service Desk" : "Regular") + " Customer to queue " + (p.getSourceType().equals("Source Service") ? "Service" : (queue_num+1)));
 
-		// give arrived product to queue
+		// Give arrived product to queue
 		this.queues.get(queue_num).giveProduct(p);
 
 		// Record the arrival times
@@ -121,10 +107,6 @@ public class Source implements CProcess {
 		} else {
 			Simulation.arrivalTimeServiceList.add(tme);
 		}
-
-		// This method is just for testing purposes to see how long every queue is
-//		this.printQueueLengths(tme, queue_num);
-
 
 		// Generate duration
 		if (1/arrivalRate > 0) {
@@ -141,9 +123,14 @@ public class Source implements CProcess {
 		}
 	}
 
+	/**
+	 * Determine which queue is the smallest
+	 * @param queues List of queues to choose from to which the product can be sent
+	 * @return The number of the smallest queue
+	 */
 	private int choose_queue(ArrayList<Queue> queues) {
 		if (this.name.equals("Source Service")) {
-			// Always return 0 if customer is from service desk customer source
+			// Always return 0 if customer is from the service desk customer source
 			return 0;
 		}
 
@@ -151,16 +138,19 @@ public class Source implements CProcess {
 		int smallest = queues.get(0).getSize();
 		int smallestNum = 0;
 
-		for (int i = 0; i < queues.size()-1; i++) {
-			// Check for all open cash registers which one has the smallest queue
+		// Check for all open cash registers which one has the smallest queue
+		for (int i = 0; i < queues.size() - 1; i++) {
 			if (queues.get(i).getWorking()) {
 				if (i == 5) { // This is the cash register at the service desk
+					// Total length of queues is the length both queues at service desk summed
 					int rows_service = queues.get(5).getSize() + queues.get(6).getSize();
+					// Update smallest queue when size of queue is smaller than previous smallest queue
 					if (rows_service < smallest) {
 						smallest = rows_service;
 						smallestNum = 5;
 					}
 				} else {
+					// Update smallest queue when size of queue is smaller than previous smallest queue
 					if (queues.get(i).getSize() < smallest) {
 						smallest = queues.get(i).getSize();
 						smallestNum = i;
@@ -179,33 +169,20 @@ public class Source implements CProcess {
 			}
 		}
 
+		// Return the queue number of the smallest queue
 		return smallestNum;
 	}
 
+	/**
+	 * Draw a random exponentially distributed variate with mean
+	 * @param mean Mean of exponential distribution
+	 * @return (Pseudo-)randomly generated exponentially distributed variate
+	 */
 	public static double drawRandomExponential(double mean) {
 		// draw a [0,1] uniform distributed number
 		double u = Math.random();
-		// Convert it into a exponentially distributed random variate with mean 33
-		double res = -mean*Math.log(u);
+		// Convert it into an exponentially distributed random variate with given mean
+		double res = -mean * Math.log(u);
 		return res;
-	}
-
-	private void printQueueLengths(double tme, int queue_num) {
-		if (queues.size() == 7) {
-			System.out.println("Arrival at queue " + (queue_num+1) + " was at time = " + tme);
-
-			for (int i = 0; i < queues.size()-1; i++) {
-				if (i==5) {
-					int row_size = queues.get(i).getSize()+queues.get(i+1).getSize();
-					System.out.print("Q6+S: " + row_size + "\n\n");
-				} else {
-					System.out.print("Q" + (i+1) + ": " + queues.get(i).getSize() + " ");
-				}
-			}
-		} else {
-			System.out.println("Arrival at queue " + 6 + "+S was at time = " + tme);
-			int row_size = queues.get(0).getSize() + queues.get(1).getSize();
-			System.out.println("Q6+S: " + row_size + "\n");
-		}
 	}
 }

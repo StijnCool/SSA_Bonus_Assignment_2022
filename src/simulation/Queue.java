@@ -18,9 +18,11 @@ public class Queue implements ProductAcceptor {
 	private int queueNumber;
 	
 	/**
-	*	Initializes the queue and introduces a dummy machine
-	*	the machine has to be specified later
-	*/
+	 * Initializes the queue and introduces a dummy machine
+	 * The machine has to be specified later
+	 * @param queue_type Specifies whether the queue/cash register is always "open" or "switching" from open to closed and vice versa
+	 * @param queueNumber Number of the queue (helps with recording the data)
+	 */
 	public Queue(String queue_type, int queueNumber) {
 		this.type = queue_type;
 		this.working = queue_type.equals("open");
@@ -30,9 +32,10 @@ public class Queue implements ProductAcceptor {
 	}
 	
 	/**
-	*	Asks a queue to give a product to a machine
-	*	True is returned if a product could be delivered; false if the request is queued
-	*/
+	 * Asks a queue to give a product to a machine
+	 * True is returned if a product could be delivered; false if the request is queued
+	 * @param machine The machine that ask a new customer/product
+	 */
 	public boolean askProduct(Machine machine) {
 		// This is only possible with a non-empty queue
 		if (row.size() > 0) {
@@ -48,11 +51,10 @@ public class Queue implements ProductAcceptor {
 				this.recordQueueLeaving(tme);
 
 				// The queue will be set as closed (working = false) if the queue is empty and its type is "switching"
-				if (row.size()==0 && type.equals("switching")) {
+				if (row.size() == 0 && type.equals("switching")) {
 					working = false;
 				}
-
-				return true;
+				return true; // Machine accepted the customer/product
 			} else {
 				return false; // Machine rejected; don't queue request
 			}
@@ -63,12 +65,11 @@ public class Queue implements ProductAcceptor {
 	}
 	
 	/**
-	*	Offer a product to the queue
-	*	It is investigated whether a machine wants the product, otherwise it is stored
-	*/
+	 * Offer a product to the queue
+	 * It is investigated whether a machine wants the product, otherwise it is stored
+	 * @param p The product to be given to the queue
+	 */
 	public boolean giveProduct(Product p) {
-//		System.out.println("Queue ---> Source type: " + p.getSourceType());
-
 		// Record the time at which the customer arrives at the queue and the resulting queue-lengths
 		this.recordQueueArrival(p.getTimes().get(0));
 
@@ -82,25 +83,27 @@ public class Queue implements ProductAcceptor {
 
 				// If the product is sent to the machine, it left the queue
 				if (delivered) {
-//					System.out.println("Queue ---> " + (p.getSourceType().equals("Source Service") ? "Service Desk" : "Regular") + " Customer was sent to " + requests.get(0).getName());
-
-					// Record the time at which the customer leaves the queue and the resulting queue-lengths
+					// Record time at which customer left the queue and the resulting queue-lengths
 					this.recordQueueLeaving(p.getTimes().get(1));
 				}
 
-				// remove the request regardless of whether or not the product has been accepted
+				// remove the request regardless of whether the product has been accepted
 				requests.remove(0);
 			}
 			if (!delivered)
-				row.add(p); // Otherwise store it
+				row.add(p); // Otherwise, store it
 		}
 		return true;
 	}
 
-	// Method to record the arrival times
+	/**
+	 * Method to record the arrival times and the resulting queue-lengths
+	 * @param tme Time of arrival of customer/product
+	 */
 	private void recordQueueArrival(double tme) {
 		List<Double> curr;
 		if (Simulation.queueMatrix.size() == 0) {
+			// In case this is the first arrival we need to initialise the first entry
 			curr = new ArrayList<>();
 			curr.add(tme);
 			for (int i = 1; i <= 7; i++) {
@@ -110,25 +113,30 @@ public class Queue implements ProductAcceptor {
 					curr.add(0.0);
 				}
 			}
-			curr.add(1.0);
+			curr.add(1.0); // 1.0 here means arrival
 		} else {
 			// Get the previous record to determine current record
 			List<Double> prev = List.copyOf(Simulation.queueMatrix.get(Simulation.queueMatrix.size() - 1));
 			curr = new ArrayList<>(prev);
 
 			// Standard updates for the new record
-			curr.set(0, tme);
-			curr.set(prev.size()-1, 1.0);
+			curr.set(0, tme); // set time of arrival
+			curr.set(prev.size()-1, 1.0); // 1.0 here means arrival at queue
 
 			// Update corresponding queue-length after customer left the queue
 			curr.set(queueNumber, (double) (this.getSize()+1));
 		}
 
+		// Add new record to queueMatrix
 		Simulation.queueMatrix.add(curr);
 		System.out.print("Queue ---> Recorded arrival time including queue-lengths: " + curr);
 		System.out.println(" ---> queueMatrix.size() = " + Simulation.queueMatrix.size() + "\n");
 	}
 
+	/**
+	 * Method to record the times of departure from queue and the resulting queue-lengths
+	 * @param tme Time of departure from queue of customer/product
+	 */
 	private void recordQueueLeaving(double tme) {
 		// Get the previous record to determine current record
 		List<Double> prev = List.copyOf(Simulation.queueMatrix.get(Simulation.queueMatrix.size() - 1));
@@ -136,7 +144,7 @@ public class Queue implements ProductAcceptor {
 
 		// Standard updates for the new record
 		curr.set(0, tme);
-		curr.set(prev.size()-1, 2.0);
+		curr.set(prev.size()-1, 2.0); // 2.0 here means a departure from queue
 
 		// Update corresponding queue-length after customer left the queue
 		curr.set(queueNumber, (double) this.getSize());
@@ -157,9 +165,5 @@ public class Queue implements ProductAcceptor {
 
 	public boolean getWorking() {
 		return working;
-	}
-
-	public int getQueueNumber() {
-		return queueNumber;
 	}
 }

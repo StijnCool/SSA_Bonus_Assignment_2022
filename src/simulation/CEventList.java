@@ -3,11 +3,11 @@ package simulation;
 import java.util.ArrayList;
 
 /**
- *	Event processing mechanism
- *	Events are created here and it is ensured that they are processed in the proper order
- *	The simulation clock is located here.
- *	@author Joel Karel
- *	@version %I%, %G%
+ * Event processing mechanism
+ * Events are created here and it is ensured that they are processed in the proper order
+ * The simulation clock is located here.
+ * @author Joel Karel
+ * @version %I%, %G%
  */
 public class CEventList implements CProcess {
 	/** The time in the simulation */
@@ -18,21 +18,21 @@ public class CEventList implements CProcess {
 	private boolean stopFlag;
 
 	/**
-	*	Standard constructor
-	*	Create an CEventList object
-	*/
+	 * Standard constructor
+	 * Create an CEventList object
+	 */
 	public CEventList() {
-		currentTime = 0;
-		stopFlag = false;
-		events = new ArrayList<>();
+		this.currentTime = 0;
+		this.stopFlag = false;
+		this.events = new ArrayList<>();
 	}
 	
 	/**
-	*	Method for the construction of a new event.
-	*	@param target The object that will process the event
-	*	@param type A type indicator of the event for objects that can process multiple types of events.
-	*	@param tme The time at which the event will be executed
-	*/
+	 * Method for the construction of a new event.
+	 * @param target The object that will process the event
+	 * @param type A type indicator of the event for objects that can process multiple types of events.
+	 * @param tme The time at which the event will be executed
+	 */
 	public void add(CProcess target, int type, double tme) {
 		boolean success = false;
 
@@ -57,12 +57,12 @@ public class CEventList implements CProcess {
 	}
 	
 	/**
-	*	Method for starting the eventlist.
-	*	It will run until there are no longer events in the list
-	*/
+	 * Method for starting the eventlist.
+	 * It will run until there are no longer events in the list
+	 */
 	public void start() {
 		// stop criterion
-		while ((events.size()>0) && (!stopFlag)) {
+		while ((events.size() > 0) && (!stopFlag)) {
 			// Make the simulation time equal to the execution time of the first event in the list that has to be processed
 			currentTime = events.get(0).getExecutionTime();
 			// Let the element be processed
@@ -73,14 +73,14 @@ public class CEventList implements CProcess {
 	}
 
 	/**
-	*	Method for starting the eventlist.
-	*	It will run until there are no longer events in the list or that a maximum time has elapsed
-	*	@param mx De maximum time of the simulation
-	*/
+	 * Method for starting the eventlist.
+	 * It will run until there are no longer events in the list or that a maximum time has elapsed
+	 * @param mx The maximum time of the simulation
+	 */
 	public void start(double mx) {
 		add(this,-1,mx);
 		// stop criterion
-		while ((events.size()>0) && (!stopFlag)) {
+		while ((events.size() > 0) && (!stopFlag)) {
 			// Make the simulation time equal to the execution time of the first event in the list that has to be processed
 			currentTime = events.get(0).getExecutionTime();
 			// Let the element be processed
@@ -90,28 +90,32 @@ public class CEventList implements CProcess {
 		}
 	}
 
+	/**
+	 * Set stopFlag to true to stop the simulation
+	 */
 	public void stop() {
-		stopFlag = true;
+		this.stopFlag = true;
 	}
 
 	/**
-	*	Method for accessing the simulation time.
-	*	The variable with the time is private to ensure that no other object can alter it.
-	*	This method makes it possible to read the time.
-	*	@return The current time in the simulation
-	*/
+	 * Method for accessing the simulation time.
+	 * The variable with the time is private to ensure that no other object can alter it.
+	 * This method makes it possible to read the time.
+	 * @return The current time in the simulation
+	 */
 	public double getTime() {
-		return currentTime;
+		return this.currentTime;
 	}
 	
 	/**
-	*	Method to have this object process an event
-	*	@param type	The type of the event that has to be executed
-	*	@param tme	The current time
-	*/
+	 * Method to have this object process an event
+	 * @param type The type of the event that has to be executed
+	 * @param tme The current time
+	 */
 	@Override
 	public void execute(int type, double tme) {
-		if(type==-1)
+		if (type == -1) {
 			stop();
+		}
 	}
 }

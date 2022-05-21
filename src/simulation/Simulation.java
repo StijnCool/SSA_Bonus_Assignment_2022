@@ -94,6 +94,7 @@ public class Simulation {
 
     	// Create an eventlist
 	    CEventList l = new CEventList();
+
 	    // The queues for the machines
         Queue queueCash1 = new Queue("open",1);
         Queue queueCash2 = new Queue("open",2);
@@ -102,14 +103,18 @@ public class Simulation {
         Queue queueCash5 = new Queue("switching",5);
         Queue queueCashService = new Queue("open",6);
         Queue queueService = new Queue("open",7);
+
         // List of queues for the sources
         ArrayList<Queue> cashQueues = new ArrayList<>(Arrays.asList(queueCash1, queueCash2, queueCash3, queueCash4, queueCash5, queueCashService, queueService));
         ArrayList<Queue> serviceDeskQueues = new ArrayList<>(Arrays.asList(queueService, queueCashService));
-        // A source
+
+        // The sources
         Source sourceRegular = new Source(cashQueues, l, "Source Regular", 1);
         Source sourceService = new Source(serviceDeskQueues,l,"Source Service",0.2);
-        // A sink
+
+        // The sink
         Sink si = new Sink("Sink 1");
+
         // The machines
         Machine machineCash1 = new Machine(queueCash1,si,l,"Machine Cash 1", 2.6,1.1, "single");
         Machine machineCash2 = new Machine(queueCash2,si,l,"Machine Cash 2", 2.6,1.1, "single");
@@ -117,7 +122,8 @@ public class Simulation {
         Machine machineCash4 = new Machine(queueCash4,si,l,"Machine Cash 4", 2.6,1.1, "single");
         Machine machineCash5 = new Machine(queueCash5,si,l,"Machine Cash 5", 2.6,1.1, "single");
         Machine machineService = new Machine(serviceDeskQueues,si,l,"Machine Service", new double[]{4.1, 2.6},new double[]{1.1, 1.1}, "both");
-        // start the eventlist
+
+        // Start the eventlist
         l.start(max_time);
 
         // Write to a file
@@ -131,8 +137,8 @@ public class Simulation {
             write_to_file(queueMatrix, "queueMatrix" + iteration);
         }
 
-        System.out.println();
         // Prints for testing purposes
+        System.out.println();
         print("arrivalTimeNormalList: " + arrivalTimeNormalList.size());
         //print(arrivalTimeNormalList);
         print("arrivalTimeServiceList: " + arrivalTimeServiceList.size());
@@ -147,6 +153,7 @@ public class Simulation {
         System.out.println("\n");
         //print_matrix(queueMatrix);
 
+        // Clear the recorded times for new simulation
         arrivalTimeNormalList = new ArrayList<>();
         arrivalTimeServiceList = new ArrayList<>();
         delayNormalList = new ArrayList<>();
@@ -183,17 +190,28 @@ public class Simulation {
         return Math.max(X,minimumServiceTime);
     }
 
+    /**
+     * Method to print the ArrayLists with the recorded data
+     */
     private static <T> void print(T s) {
         System.out.println(s);
     }
 
+    /**
+     * Method to print queueMatrix
+     */
     public static void print_matrix(List<List<Double>> M) {
         for (List<Double> l : M) {
             print(l);
         }
     }
 
-    public static void write_to_file(List L, String filename){
+    /**
+     * Method to write the recorded data to a file
+     * @param L The list we want to write a file of
+     * @param filename The name of the file
+     */
+    public static void write_to_file(List L, String filename) {
         try {
             FileWriter myWriter = new FileWriter("files/"+filename+".txt");
             String s = "";
@@ -217,5 +235,4 @@ public class Simulation {
             e.printStackTrace();
         }
     }
-    
 }
