@@ -82,7 +82,7 @@ public class Simulation {
         - Minimum service time = 1 sec
          */
         boolean writeToFiles = true;
-        double max_time = 120;
+        double max_time = 460; // 8 hours working day
         for(int i = 1; i<=10; i++) {
             //generator = new Random(i^i);
             run_simulation(i, max_time, writeToFiles);
@@ -127,8 +127,8 @@ public class Simulation {
             write_to_file(arrivalTimeServiceList, "arrivalTimeServiceList" + iteration);
             write_to_file(delayNormalList, "delayNormalList" + iteration);
             write_to_file(delayServiceList, "delayServiceList" + iteration);
-            write_to_file(serviceTimeNormalList, "serviceTimeNormalList" + iteration);
-            write_to_file(serviceTimeServiceList, "serviceTimeServiceList" + iteration);
+            write_to_file(serviceTimeNormalList, "serviceTimeServiceList" + iteration); // these are switched in the code
+            write_to_file(serviceTimeServiceList, "serviceTimeNormalList" + iteration);
             write_to_file(queueMatrix, "queueMatrix" + iteration);
         }
 
