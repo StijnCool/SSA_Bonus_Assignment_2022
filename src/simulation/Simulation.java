@@ -27,8 +27,7 @@ public class Simulation {
     public static List<Double> serviceTimeNormalList = new ArrayList<>();
     public static List<Double> serviceTimeServiceList = new ArrayList<>();
 
-    /* TODO: Record queue times when they change
-        The nxm+1 matrix takes the following form:
+    /* The nxm+1 matrix takes the following form:
              t1,#Q1@t1,...,#Qj@t1,...,#Qm@t1,id1
              ⋮     ⋮          ⋮           ⋮    ⋮
             ti,#Q1@ti,...,#Qj@ti,...,#Qm@ti,idi
@@ -41,6 +40,7 @@ public class Simulation {
         For a matrix List<List<Double>> L, L.get(0) should return {l11,...,l1m}, but not {l11,...,ln1}
         This means the first list should store all rows, and the second list the entries for the columns in that row
      */
+
     /*
     For products arriving and getting into the queue, look at the print statements in source.java - execute
     If someone goes to the service desk, it only returns the queue for the service desk, so if that happens copy the
