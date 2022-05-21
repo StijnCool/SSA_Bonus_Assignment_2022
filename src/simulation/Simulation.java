@@ -27,8 +27,7 @@ public class Simulation {
     public static List<Double> serviceTimeNormalList = new ArrayList<>();
     public static List<Double> serviceTimeServiceList = new ArrayList<>();
 
-    /* TODO: Record queue times when they change
-        The nxm+1 matrix takes the following form:
+    /* The nxm+1 matrix takes the following form:
              t1,#Q1@t1,...,#Qj@t1,...,#Qm@t1,id1
              ⋮     ⋮          ⋮           ⋮    ⋮
             ti,#Q1@ti,...,#Qj@ti,...,#Qm@ti,idi
@@ -41,6 +40,7 @@ public class Simulation {
         For a matrix List<List<Double>> L, L.get(0) should return {l11,...,l1m}, but not {l11,...,ln1}
         This means the first list should store all rows, and the second list the entries for the columns in that row
      */
+
     /*
     For products arriving and getting into the queue, look at the print statements in source.java - execute
     If someone goes to the service desk, it only returns the queue for the service desk, so if that happens copy the
@@ -53,7 +53,7 @@ public class Simulation {
 
     */
     public static List<List<Double>> queueMatrix = new ArrayList<>();
-    private final static Random generator = new Random(314159);
+    private static Random generator = new Random();
 	
 
     /**
@@ -81,11 +81,12 @@ public class Simulation {
         - Standard deviation = 1.1 min = 66 s
         - Minimum service time = 1 sec
          */
-
-        double max_time = 60;
         boolean writeToFiles = true;
+        double max_time = 460; // 8 hours working day
         for(int i = 1; i<=10; i++) {
+            //generator = new Random(i^i);
             run_simulation(i, max_time, writeToFiles);
+            print(i);
         }
     }
 
@@ -132,8 +133,8 @@ public class Simulation {
             write_to_file(arrivalTimeServiceList, "arrivalTimeServiceList" + iteration);
             write_to_file(delayNormalList, "delayNormalList" + iteration);
             write_to_file(delayServiceList, "delayServiceList" + iteration);
-            write_to_file(serviceTimeNormalList, "serviceTimeNormalList" + iteration);
-            write_to_file(serviceTimeServiceList, "serviceTimeServiceList" + iteration);
+            write_to_file(serviceTimeNormalList, "serviceTimeServiceList" + iteration); // these are switched in the code
+            write_to_file(serviceTimeServiceList, "serviceTimeNormalList" + iteration);
             write_to_file(queueMatrix, "queueMatrix" + iteration);
         }
 
